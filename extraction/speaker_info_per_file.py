@@ -160,14 +160,14 @@ def write_info(corpus_name, subset, info):
     """ write output """
 
     with open("{}_{}.csv".format(corpus_name, subset), "w") as fout: 
-        fout.write(u'file,key_child_age,clip_length,nb_diff_speakers,nb_children,nb_fem_ad,nb_mal_ad,nb_uncertain,prop_ovl_speech,prop_nonovl_speech,avg_voc_dur,snr')
+        fout.write(u'file,key_child_age,clip_length,nb_diff_speakers,nb_children,nb_fem_ad,nb_mal_ad,nb_uncertain,prop_ovl_speech,prop_nonovl_speech,avg_voc_dur,snr\n')
         for wav in info:
             (dur, snr, n_spk, n_chi,
              n_fa, n_ma, n_unk, ovl,
              non_ovl, mean_voc) = info[wav]
-            fout.write(u'{wav},,{dur},{n_spk},{chi}'
-                        ',{f},{m},{u},{ovl},{novl},'
-                        '{voc},{snr}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
+            fout.write(u'{wav},,{dur:.2f},{n_spk},{chi}'
+                    ',{f},{m},{u},{ovl:.2f},{novl:.2f},'
+                    '{voc:.2f},{snr:.2f}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
                                              chi=n_chi, f=n_fa, m=n_ma, u=n_unk,
                                              ovl=ovl, novl=non_ovl, voc=mean_voc,
                                              snr=snr))
