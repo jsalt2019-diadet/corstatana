@@ -162,10 +162,10 @@ def measure_overlap(annot, info):
             # overlap duration
             if on <= prev_off:
                 dur_ovl += prev_off - on
-                dur_ovl_perSpk[spk_map[lab]] += prev_off - on
+                dur_ovl_perSpk[lab] += prev_off - on
 
             dur_speech += off - on
-            dur_speech_perSpk[spk_map[lab]] += off - on
+            dur_speech_perSpk[lab] += off - on
             all_vocs.append(dur_speech)
 
             prev_on = on
@@ -173,7 +173,7 @@ def measure_overlap(annot, info):
 
         # get duration of non overlapping speech and compute ratios
         dur_nonovl = dur_speech - dur_ovl
-        dur_nonovl_perSpk[spk_map[lab]] += dur_speech_perSpk[spk_map[lab]] - dur_ovl_perSpk[spk_map[lab]]
+        dur_nonovl_perSpk[lab] += dur_speech_perSpk[lab] - dur_ovl_perSpk[lab]
         
         if dur_speech > 0:
             info[wav].append(dur_ovl/dur_speech) # ratio of overlap speech
@@ -184,8 +184,8 @@ def measure_overlap(annot, info):
             info_perSpk[wav].append(dur_speech_perSpk)
     return info, info_perSpk
 
-def write_info(corpus_name, subset, info):
-    """ write output """
+def write_info_per_file(corpus_name, subset, info):
+    """ write information per file """
 
     with open(os.path.join('..','results',"{}_{}.csv".format(corpus_name, subset)), "w") as fout: 
         fout.write(u'file,key_child_age,clip_length,nb_diff_speakers,nb_children,nb_fem_ad,nb_mal_ad,nb_uncertain,prop_ovl_speech,prop_nonovl_speech,avg_voc_dur,snr\n')
@@ -199,6 +199,20 @@ def write_info(corpus_name, subset, info):
                                              chi=n_chi, f=n_fa, m=n_ma, u=n_unk,
                                              ovl=ovl, novl=non_ovl, voc=mean_voc,
                                              snr=snr))
+
+def write_info_per_speaker(corpus_name, subset, info_perSpk):
+    """ write information per speaker """
+
+    with open(os.path.join('..', 'results', '{}_{}_perSpeaker.csv'.format(corpus_name,
+              subset)), 'w') as fout:
+        fout.write(u'file,speaker,role,tot_ovl_speech,tot_nonovl_speech,snr\n')
+        for wav in info_perSpk:
+            #TODO PUT SNR 
+            dur_ovl, dur_nonovl, dur_speech = info_perSpk[wav]
+            for spk in dur_speech:
+                fout.write(u'{w},{s},{r},{o},{no},{snr}\n'.format(w=wav, s=spk, r=spk_map[spk],
+                                                                o=dur_ovl[spk],no= dur_nonovl[spk],
+                                                                snr='NA'))
 
 def main():
     parser = argparse.ArgumentParser()
@@ -229,13 +243,15 @@ def main():
         info = get_wav_len(annot, args.corpus, subset, info)
 
         # get speakers info
-        info =count_labels(annot, info)
+        info = count_labels(annot, info)
 
         # measure overlap
-        info, info_per_spk = measure_overlap(annot, info)
+        info, info_perSpk = measure_overlap(annot, info)
 
         # write output
-        write_info(corpus_name, subset, info)
+        write_info_per_file(corpus_name, subset, info)
+        write_info_per_speaker(corpus_name, subset, info_perSpk)
+
 
 if __name__ == '__main__': 
     main()
