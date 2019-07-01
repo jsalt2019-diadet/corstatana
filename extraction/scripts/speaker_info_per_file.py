@@ -97,14 +97,17 @@ def get_wav_len(annot, corpus_path, subset, info):
 
         # add SNR
         # Compute SNR as mean(wav) / std(wav)
-        buff = io.BytesIO()
-        normalize_wav(wav_path, buff)
-        buff.seek(0)
-        rate, sig = scipy.io.wavfile.read(buff)
-        #sig = scipy.io.wavfile.read(wav_path)[1] # scipy return (sample_rate, array)
+        try:
+            sig = scipy.io.wavfile.read(wav_path)[1] # scipy return (sample_rate, array)
+        except:
+            buff = io.BytesIO()
+            normalize_wav(wav_path, buff)
+            buff.seek(0)
+            ipdb.set_trace()
+            rate, sig = scipy.io.wavfile.read(buff)
+
         m = sig.mean()
         sd = sig.std()
-
         info[wav].append(float(np.where(sd == 0, 0, m/sd)))
     return info
 
@@ -112,7 +115,7 @@ def count_labels(annot, info):
     """ gather quantity information about speakers for each file"""
 
     for wav in annot:
-        labels = [spk_map[lab] for on, off, lab in annot[wav]]
+        labels = [lab for on, off, lab in annot[wav]]
 
         ##FOR DEBUG PURPOSE
         if DEBUG:
@@ -124,7 +127,11 @@ def count_labels(annot, info):
         FAs = [lab for on, off, lab in annot[wav] if spk_map[lab] == "FEM"]
         MAs = [lab for on, off, lab in annot[wav] if spk_map[lab] == "MAL"]
         uncertains = [lab for on, off, lab in annot[wav] if spk_map[lab] == "SPEECH"]
-
+        the_rest = [lab for on, off, lab in annot[wav] if spk_map[lab] != 'CHI'
+                                                       and spk_map[lab] != 'FEM'
+                                                       and spk_map[lab] != 'MAL'
+                                                       and spk_map[lab] != 'SPEECH']
+        print(the_rest)
         # append information about speaker for wav
         info[wav].append(len(set(labels))) ## number of speakers in total
         info[wav].append(len(set(CHIs))) ## number of children
@@ -137,22 +144,28 @@ def measure_overlap(annot, info):
     """ Measure quantity of overlap speech in each wav. Uses the fact
         that the annotations are sorted for each wav."""
 
-    
+    #/TODO MOVE OUTSIDE 
+    info_perSpk = defaultdict(list)
     for wav in annot:
        
 
         prev_on = -1
         prev_off= -1
         dur_ovl = 0
+        dur_ovl_perSpk = defaultdict(float)
+        dur_nonovl_perSpk = defaultdict(float)
         dur_speech = 0
+        dur_speech_perSpk = defaultdict(float)
         all_vocs = []
-        for on, off, _ in annot[wav]:
+        for on, off, lab in annot[wav]:
             # if current annotation starts before end of previous, add to
             # overlap duration
             if on <= prev_off:
                 dur_ovl += prev_off - on
+                dur_ovl_perSpk[spk_map[lab]] += prev_off - on
 
             dur_speech += off - on
+            dur_speech_perSpk[spk_map[lab]] += off - on
             all_vocs.append(dur_speech)
 
             prev_on = on
@@ -160,13 +173,16 @@ def measure_overlap(annot, info):
 
         # get duration of non overlapping speech and compute ratios
         dur_nonovl = dur_speech - dur_ovl
+        dur_nonovl_perSpk[spk_map[lab]] += dur_speech_perSpk[spk_map[lab]] - dur_ovl_perSpk[spk_map[lab]]
         
         if dur_speech > 0:
             info[wav].append(dur_ovl/dur_speech) # ratio of overlap speech
             info[wav].append(dur_nonovl/dur_speech) # ratio of non overlapping speech
             info[wav].append(np.mean(all_vocs))
-
-    return info
+            info_perSpk[wav].append(dur_ovl_perSpk)
+            info_perSpk[wav].append(dur_nonovl_perSpk)
+            info_perSpk[wav].append(dur_speech_perSpk)
+    return info, info_perSpk
 
 def write_info(corpus_name, subset, info):
     """ write output """
@@ -179,7 +195,7 @@ def write_info(corpus_name, subset, info):
              non_ovl, mean_voc) = info[wav]
             fout.write(u'{wav},,{dur:.2f},{n_spk},{chi}'
                     ',{f},{m},{u},{ovl:.2f},{novl:.2f},'
-                    '{voc:.2f},{snr:.2f}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
+                    '{voc:.2f},{snr:.4f}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
                                              chi=n_chi, f=n_fa, m=n_ma, u=n_unk,
                                              ovl=ovl, novl=non_ovl, voc=mean_voc,
                                              snr=snr))
@@ -216,7 +232,7 @@ def main():
         info =count_labels(annot, info)
 
         # measure overlap
-        info = measure_overlap(annot, info)
+        info, info_per_spk = measure_overlap(annot, info)
 
         # write output
         write_info(corpus_name, subset, info)
