@@ -15,11 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-## R Markdown
+## A first attempt
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+A scatter plot matrix shows many bivariate plots!
 
 ```{r readin}
 
@@ -27,30 +25,32 @@ read.csv("../BabyTrain_ages.csv")->ages
 ages[ages$corpus!="corpus",]->ages
 ages$age=as.numeric(as.character(ages$age))
 
-dat=NULL
-for(j in dir("../extraction/results/"))  dat=rbind(dat,cbind(j,read.csv(paste0("../extraction/results/",j))))
-dat$nb_diff_speakers=dat$nb_children+dat$nb_fem_ad+dat$nb_mal_ad+dat$nb_uncertain
-merge(dat,ages,by.x="file",by.y="basename",all.x=T)->dat
+allres=dir("../extraction/results/")
 
-summary(dat)
+datsp=NULL
+for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(paste0("../extraction/results/",j))))
 
-read.table("../AMI_MixHeadset__test__v1.txt", skip=2)->out
-colnames(out)<-c("file","der","purity","coverage","total","correct","cor.pc","fa","fa.pc","miss","miss.pc","conf","conf.pc")
+datf=NULL
+for(j in allres[grep("perSpeaker",allres,invert=T)])  datf=rbind(datf,cbind(j,read.csv(paste0("../extraction/results/",j))))
+
+merge(datsp,ages,by.x="file",by.y="basename",all.x=T)->datsp
+merge(datf,ages,by.x="file",by.y="basename",all.x=T)->datf
+
+summary(datsp)
+summary(datf)
+
+#read.table("../AMI_MixHeadset__test__v1.txt", skip=2)->out
+read.table("../eval.txt", skip=2)->out
+#colnames(out)<-c("file","der","purity","coverage","total","correct","cor.pc","fa","fa.pc","miss","miss.pc","conf","conf.pc")
+
+colnames(out)<-c("file","der","accuracy","precision","recall","total","fa","fa.pc","miss","miss.pc")
 summary(out)
 
-merge(out,dat)->out
+merge(out,datf,all=T)->out
 
 library(lattice)
 
-splom(out[c("fa.pc","miss.pc","conf.pc","prop_ovl_speech","avg_voc_dur")])
+splom(out[c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")])
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
