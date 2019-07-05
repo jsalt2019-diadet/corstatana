@@ -2,7 +2,7 @@
 title: "Description of system performance"
 author: "AC"
 output: 
-  html_document:
+  pdf_document:
     toc: yes
     toc_depth: 3
 ---
