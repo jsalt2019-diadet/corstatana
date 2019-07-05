@@ -49,8 +49,15 @@ summary(out)
 merge(out,datf,all=T)->out
 
 library(lattice)
-
-splom(out[c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")])
+selected=c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
+selnames=gsub(".","\n",gsub("_","\n",selected),fixed=T)
+splom(out[c(selected)],pch=".",groups=out$corpus,varnames=selnames,auto.key = list(columns = 3),axis.line.tck = -.5, axis.text.lineheight=0,
+panel = function(x, y, ...) {
+           panel.xyplot(x, y, ...)
+          fm <- lm(y ~ x)
+          panel.abline(fm,col.line = "gray")
+}
+)
 ```
 
 
