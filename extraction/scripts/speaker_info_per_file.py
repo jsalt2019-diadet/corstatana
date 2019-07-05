@@ -103,12 +103,12 @@ def get_wav_len(annot, corpus_path, subset, info):
             buff = io.BytesIO()
             normalize_wav(wav_path, buff)
             buff.seek(0)
-            ipdb.set_trace()
             rate, sig = scipy.io.wavfile.read(buff)
 
         m = sig.mean()
         sd = sig.std()
-        info[wav].append(float(np.where(sd == 0, 0, m/sd)))
+        #info[wav].append(float(np.where(sd == 0, 0, m/sd)))
+        print('mean sig rsn is {}'.format(float(np.where(sd == 0, 0, m/sd))))
     return info
 
 def count_labels(annot, info):
@@ -190,9 +190,9 @@ def write_info_per_file(corpus_name, subset, info):
     with open(os.path.join('..','results',"{}_{}.csv".format(corpus_name, subset)), "w") as fout: 
         fout.write(u'file,key_child_age,clip_length,nb_diff_speakers,nb_children,nb_fem_ad,nb_mal_ad,nb_uncertain,prop_ovl_speech,prop_nonovl_speech,avg_voc_dur,snr\n')
         for wav in info:
-            (dur, snr, n_spk, n_chi,
+            (dur, n_spk, n_chi,
              n_fa, n_ma, n_unk, ovl,
-             non_ovl, mean_voc) = info[wav]
+             non_ovl, mean_voc, snr) = info[wav]
             fout.write(u'{wav},,{dur:.2f},{n_spk},{chi}'
                     ',{f},{m},{u},{ovl:.2f},{novl:.2f},'
                     '{voc:.2f},{snr:.4f}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
@@ -208,12 +208,109 @@ def write_info_per_speaker(corpus_name, subset, info_perSpk):
         fout.write(u'file,speaker,role,tot_ovl_speech,tot_nonovl_speech,snr\n')
         for wav in info_perSpk:
             #TODO PUT SNR 
-            dur_ovl, dur_nonovl, dur_speech = info_perSpk[wav]
+            dur_ovl, dur_nonovl, dur_speech, snr= info_perSpk[wav]
             for spk in dur_speech:
                 fout.write(u'{w},{s},{r},{o},{no},{snr}\n'.format(w=wav, s=spk, r=spk_map[spk],
                                                                 o=dur_ovl[spk],no= dur_nonovl[spk],
-                                                                snr='NA'))
+                                                                snr=snr[spk]))
 
+
+def get_silence_times(annot, info):
+    """ Extract silences timestamps from annotations.
+        Add "SIL" label to follow same format as annotation."""
+
+    sils = defaultdict(list)
+
+    # annotations are already sorted
+    for wav in annot:
+        prev_on = 0
+        prev_off = 0
+        wav_dur = info[wav][0]
+        for i, (on, off, lab) in enumerate(annot[wav]):
+            # count as silence from 0 to first annotation,
+            # if there's a gap between previous offset and 
+            # current onset, and from last offset to end of wav
+            if on > prev_off:
+                sils[wav].append((prev_off, on, "SIL"))
+            if off > prev_off:
+                prev_off = off
+            prev_on = on
+        # check last label vs wav duration
+        if wav_dur > annot[wav][-1][1]:
+            sils[wav].append((annot[wav][-1][1], wav_dur, "SIL"))
+    return sils
+
+                
+def extract_wav_from_label(wav, corpus_path, subset, annot, label):
+    """ extract array from wav file that contain only parts indicated by label
+        in annotation.
+        input 
+            wav: array containing the wav file
+            annot : annotations of the wav
+            label: label you want to extract - if label is "ALL", get all speech 
+                   intervals
+        output
+            label_wav : array containing parts of the wav indicated by label
+    """
+    wav_path = os.path.join(corpus_path,
+                            subset, "wav",
+                            "{}.wav".format(wav))
+
+    frate, wav = scipy.io.wavfile.read(wav_path)
+
+    # get onsets and offsets
+    if label == "ALL":
+        labs = [np.arange(int(frate*on), int(frate*off))
+                for on, off, lab in annot]
+    else:
+        labs = [np.arange(int(frate*on), int(frate*off))
+                for on, off, lab in annot 
+                if spk_map[lab] == label]
+    try:
+        lab_idx = np.concatenate(labs)
+    except:
+        return
+
+    # get array that contains signal only from requested label
+    lab_sig = wav[lab_idx]
+    
+    return lab_sig
+
+def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
+    """ Estimate SNR by computing ration of regions w/ signal and 
+        region without signal"""
+    def rms(x):
+        'compute RMS of signal x'
+        n = len(x)
+        return np.sqrt( (1/n) * np.sum(np.square(x)))
+    
+    per_label_snr = defaultdict(list)
+    
+    
+    for wav in annot:
+
+        sil_sig = extract_wav_from_label(wav, corpus, subset, sils[wav], "SIL")
+        speech_sig = extract_wav_from_label(wav, corpus, subset, annot[wav], "ALL")
+
+        # global SNR
+        info[wav].append(rms(speech_sig) / rms(sil_sig))
+        print('Global snr is {}'.format(info[wav][-1]))
+        
+        for label in ['KCHI', 'CHI', 'FEM', 'MAL', 'SPEECH']:
+            lab_sig = extract_wav_from_label(wav, corpus, subset, annot[wav], label)
+             
+            # per label SNR
+            if lab_sig is not None:
+                per_label_snr[label] = rms(lab_sig) / rms(sil_sig)
+            else:
+                per_label_snr[label] = "NA"
+
+
+        info_perSpk[wav].append(per_label_snr)
+    return info, info_perSpk       
+    
+
+    
 def main():
     parser = argparse.ArgumentParser()
 
@@ -252,6 +349,11 @@ def main():
 
             # measure overlap
             info, info_perSpk = measure_overlap(annot, info)
+
+            # estimate SNR
+            sils = get_silence_times(annot, info)
+            info, info_perSpk = estimate_snr(annot, args.corpus, subset, sils,
+                                             info, info_perSpk)
 
             # write output
             write_info_per_file(corpus_name, subset, info)
