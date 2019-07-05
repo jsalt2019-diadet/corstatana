@@ -56,7 +56,7 @@ summary(out)
 
 The table out has a combination of results and descriptors at the level of files.
 
-### Explaining misses and false alarms across files based on file characteristics
+### Explaining misses and false alarms across files based on file characteristics (Marvin VAD on BabyTrain - 5 class, old architecture)
 
 A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file and only for BabyTrain because that's what I drew results for. We only have false alarms and misses because we are looking at a VAD system. (In particular, this is Marvin's system for last week.)
 
