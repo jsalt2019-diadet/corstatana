@@ -60,7 +60,7 @@ The table out has a combination of results and descriptors at the level of files
 
 A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file and only for BabyTrain because that's what I drew results for. We only have false alarms and misses because we are looking at a VAD system. (In particular, this is Marvin's system for last week.)
 
-```{r spl}
+```{r spl,fig.height=10}
 
 library(lattice)
 selected=c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
