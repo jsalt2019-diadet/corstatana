@@ -10,14 +10,17 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-
-
-
 ```
 
 ## A first attempt
 
-A scatter plot matrix shows many bivariate plots!
+The goal here is to link system performance to characteristics of files and/or speakers on files. See
+[this file](https://docs.google.com/document/d/1Ef_lr6QAWSa8RKOvC6bbnb6ewd538bBHmQiMYjDRezE/edit) for explanation of the fields.
+
+### Read in data
+
+We read in background data (only exists for babytrain), data describing files and speakers, as well as results. For now, we only have results at the level of files (not individual speakers within files).
+
 
 ```{r readin}
 
@@ -44,9 +47,20 @@ read.table("../eval.txt", skip=2)->out
 #colnames(out)<-c("file","der","purity","coverage","total","correct","cor.pc","fa","fa.pc","miss","miss.pc","conf","conf.pc")
 
 colnames(out)<-c("file","der","accuracy","precision","recall","total","fa","fa.pc","miss","miss.pc")
-summary(out)
+
 
 merge(out,datf,all=T)->out
+
+summary(out)
+```
+
+The table out has a combination of results and descriptors at the level of files.
+
+### Explaining misses and false alarms across files based on file characteristics
+
+A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file and only for BabyTrain because that's what I drew results for. We only have false alarms and misses because we are looking at a VAD system. (In particular, this is Marvin's system for last week.)
+
+```{r spl}
 
 library(lattice)
 selected=c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
@@ -60,4 +74,14 @@ panel = function(x, y, ...) {
 )
 ```
 
+Focus on the last two rows, which show the correlations between percent misses (penultimate row) or percent false alarms (last row) and the following selected characteristics (from left to right):
 
+- proportion of speech that is overlapping
+- average vocalization/utterance/sentence duration
+- key child age
+- SNR calculated as RMS(x_speech)/RMS(x_sil) where x_speech is an array with all the areas of speech in the gold annotation, and  x_sil is un array with all the areas of silence
+- number of different speakers
+
+So focusing on the last row, false alarms look unrelated to all of these predictors, although this may be because the scale is too large.
+
+One row up, misses does not relate to proportion overlap or number of different speakers, but is anticorrelated with the duration of speech, child age, and SNR.
