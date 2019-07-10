@@ -17,42 +17,51 @@ knitr::opts_chunk$set(echo = TRUE)
 The goal here is to link system performance to characteristics of files and/or speakers on files. See
 [this file](https://docs.google.com/document/d/1Ef_lr6QAWSa8RKOvC6bbnb6ewd538bBHmQiMYjDRezE/edit) for explanation of the fields.
 
-### Read in data
+### Read in descriptor data
 
-We read in background data (only exists for babytrain), data describing files and speakers, as well as results. For now, we only have results at the level of files (not individual speakers within files).
+We read in background data (only exists for babytrain), data describing files and speakers. Typically, this does not depend on your system results, so you do not need to change it.
 
-
-```{r readin}
+```{r readin-descriptors}
+# options(warn=2) for debugging, then options(warn=1)
 
 read.csv("../BabyTrain_ages.csv")->ages
 ages[ages$corpus!="corpus",]->ages
 ages$age=as.numeric(as.character(ages$age))
 
-allres=dir("../extraction/results/")
+allres=dir("../computation/results/",pattern=".csv")
 
+#descriptors per speaker
 datsp=NULL
-for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(paste0("../extraction/results/",j))))
+for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(paste0("../computation/results/",j))))
 
+#descriptors per file
 datf=NULL
-for(j in allres[grep("perSpeaker",allres,invert=T)])  datf=rbind(datf,cbind(j,read.csv(paste0("../extraction/results/",j))))
+for(j in allres[grep("perSpeaker",allres,invert=T)])  datf=rbind(datf,cbind(j,read.csv(paste0("../computation/results/",j))))
 
 merge(datsp,ages,by.x="file",by.y="basename",all.x=T)->datsp
 merge(datf,ages,by.x="file",by.y="basename",all.x=T)->datf
 
+dim(datsp)
 summary(datsp)
+dim(datf)
 summary(datf)
+```
 
-#read.table("../AMI_MixHeadset__test__v1.txt", skip=2)->out
-read.table("../eval.txt", skip=2)->out
-#colnames(out)<-c("file","der","purity","coverage","total","correct","cor.pc","fa","fa.pc","miss","miss.pc","conf","conf.pc")
+### Read in system data **HUMAN LOOK HERE**
 
-colnames(out)<-c("file","der","accuracy","precision","recall","total","fa","fa.pc","miss","miss.pc")
+Typically you WILL need to change line 50 below, so that you read in your own system results. Please use pyannote.metrics to generate your results. They should be space separated 
 
+```{r readin-eval}
+library(readr)
+out <- read_table("../system_eval/BabyTrain_ConvRNN.txt", comment = "--")
 
+dim(out)
+summary(out)
 merge(out,datf,all=T)->out
 
 summary(out)
 ```
+
 
 The table out has a combination of results and descriptors at the level of files.
 
