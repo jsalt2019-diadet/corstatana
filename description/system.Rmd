@@ -133,12 +133,14 @@ for(thismet in file_eval_metrics){
   iqr=IQR(file_eval[,thismet])
   med=median(file_eval[,thismet])
   no_outliers=file_eval[file_eval[,thismet]<med+1.5*iqr,]
-  print(paste("removing",dim(file_eval)[1]-dim(no_outliers)[1], "outliers in",thismet))
+  print(paste("removing",dim(file_eval)[1]-dim(no_outliers)[1], "outliers in",thismet,"specifically the following files:"))
+  print(file_eval[file_eval[,thismet]>=med+1.5*iqr,"file"])
   for(thispred in predictors){
-    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.1),xlab=thispred,ylab=thismet)
+    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=thismet)
     abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))
+    print(summary(lm(no_outliers[,thismet]~no_outliers[,thispred])))
     if(max(no_outliers[,thismet])>300){
-        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.1),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
+        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
     abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))      
     }
   }
@@ -151,20 +153,24 @@ Messages I take away from this:
 
 *For FA rate*
 
-- no strong rel with proportion of overlapping speech
-- higher FA for files with shorter voc duration
-- lower FA for files from older children
-- lower FA for files with higher SNR
-- higher FA when higher number of different speakers
+- no sig rel with total speech duration
+- sig lower FA for longer files
+- no sig rel with proportion of overlapping speech
+- sig higher FA for files with shorter voc duration
+- sig lower FA for files from older children
+- sig lower FA for files with higher SNR
+- sig higher FA when higher number of different speakers
 
 
 *For miss rate*
 
-- slight higher miss for files with higher prop overlapping speech
-- lower miss for files with longer voc dur
-- strong trend for fewer misses for files from older children
-- strong grend for fewer misses for files with higher SNR
-- higher miss when more speakers
+- no sig rel with total speech duration
+- sig lower FA for longer files
+- trend for higher miss for files with higher prop overlapping speech
+- sig lower miss for files with longer voc dur
+- sig fewer misses for files from older children
+- sig fewer misses for files with higher SNR
+- sig higher miss when more speakers
 
 #### ConvRNN version continued, now excluding Tsay and Paido
 
@@ -182,10 +188,11 @@ for(thismet in file_eval_metrics){
   no_outliers=npnt[npnt[,thismet]<med+1.5*iqr,]
   print(paste("removing",dim(npnt)[1]-dim(no_outliers)[1], "outliers in",thismet))
   for(thispred in predictors){
-    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.1),xlab=thispred,ylab=thismet)
+    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=thismet)
     abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))
-    if(max(no_outliers[,thismet])>300){
-        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.1),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
+     print(summary(lm(no_outliers[,thismet]~no_outliers[,thispred])))
+   if(max(no_outliers[,thismet])>300){
+        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
     abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))      
     }
   }
@@ -196,26 +203,30 @@ Messages that go away or remain when we excluded paido and tsay:
 
 *For FA rate*
 
-- no strong rel with proportion of overlapping speech  --> NO, the opposite
-- higher FA for files with shorter voc duration -->  --> NO, the opposite
-- lower FA for files from older children --> NO, stable
-- lower FA for files with higher SNR --> NO, stable
-- higher FA when higher number of different speakers --> NO, stable
+- no sig rel with total speech duration --> the same
+- sig lower FA for longer files --> the same
+- no sig rel with proportion of overlapping speech  --> NO, lower FA for studies with a higher proportion of overlapping speech
+- sig higher FA for files with shorter voc duration -->  --> NO, the opposite
+- sig lower FA for files from older children --> NO, stable
+- sig lower FA for files with higher SNR --> NO, stable
+- sig higher FA when higher number of different speakers --> NO, stable
 
 
 *For miss rate*
 
-- slight higher miss for files with higher prop overlapping speech --> NO, stable M for overlap
-- lower miss for files with longer voc dur  --> NO, the opposite
-- strong trend for fewer misses for files from older children --> YES (but not that strong)
-- strong grend for fewer misses for files with higher SNR --> NO, the opposite
-- higher miss when more speakers --> NO, the opposite (but weak)
+- no sig rel with total speech duration --> the same
+- sig lower FA for longer files --> the same
+- slight higher miss for files with higher prop overlapping speech --> NO, stable
+- sig lower miss for files with longer voc dur  --> NO, opposite: higher miss for files with longer voc dur
+- sig fewer misses for files from older children --> the same
+- sig fewer misses for files with higher SNR --> NO, opposite: higher miss for files with higher SNR
+- sig higher miss when more speakers --> NO, opposite: lower miss for files with more speakers
 
 #### ConvRNN version continued, checking whether subcorpora differences can be explained away via these other variables
 
 We see that many effects are different when paido and tsay are removed. This suggest that some of the apparent correlations are driven by subcorpus differences. So in this section we check whether subcorpus adds any explanatory power once clip diffs are already captured by the other methods
 
-```{r lmcomp}
+```{r lmcomp, eval=F}
 
 for(thismet in file_eval_metrics){ 
   iqr=IQR(file_eval[,thismet])
