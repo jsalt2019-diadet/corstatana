@@ -1,3 +1,0 @@
-file,key_child_age,clip_length,nb_diff_speakers,nb_children,nb_fem_ad,nb_mal_ad,nb_uncertain,prop_ovl_speech,prop_nonovl_speech,avg_voc_dur,snr
-S01_U01,,9543.74,4,0,3,1,0,0.41,0.59,5164.96,0.6443
-S21_U01,,9199.99,4,0,2,2,0,0.32,0.68,4971.41,1.1871
