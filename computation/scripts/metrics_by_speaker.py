@@ -24,6 +24,7 @@
 import os
 import sys
 import ipdb
+import numpy
 import argparse
 import pyannote
 import pyannote.metrics
@@ -43,6 +44,8 @@ def get_mapping(reference, system):
 
     return mapping
 
+def get_speech_duration(reference):
+
 def accumulate_reference(r_labels, s_labels, mapping):
     """ Using the mapping, fill the first column of the results table"""
     correct = defaultdict(int)
@@ -55,7 +58,9 @@ def accumulate_reference(r_labels, s_labels, mapping):
             s_label = s_labels[s_spk]
             # iterate on segments in common in reference and system
             for r, s in r_label.co_iter(s_label):
-                if s_spk in mapping and r_spk == mapping[s_spk]:
+                if ((mapping == None) 
+                    or (s_spk in mapping 
+                        and r_spk == mapping[s_spk])): 
                     correct[r_spk] += (r & s).duration
                 else:
                     miss_spk[r_spk] += (r & s).duration
@@ -76,7 +81,9 @@ def  accumulate_system(r_labels, s_labels, mapping):
             s_label = s_labels[s_spk]
             # iterate on segments in common in reference and system
             for s, r in s_label.co_iter(r_label):
-                if s_spk in mapping and r_spk == mapping[s_spk]:
+                if ((mapping == None)
+                    or (s_spk in mapping 
+                        and r_spk == mapping[s_spk])):
                     correct[r_spk] += (s & r).duration
                 else:
                     FA_spk[r_spk] += (s & r).duration
@@ -87,7 +94,7 @@ def  accumulate_system(r_labels, s_labels, mapping):
 
     return correct, FA_spk, FA_speech
 
-def write_evaluation(results):
+def write_evaluation(results, vad):
     ''' Write the results in a table reporting the time spent in 
         each of the following cell:
              ________________________________________________________________
@@ -102,12 +109,13 @@ def write_evaluation(results):
             |        |  No Speaker  | M. speech |    other      |   other    |
             |________|______________|___________|_______________|____________|
     '''
-    print('been there')
     for uri in results:
-        print('done that {}'.format(uri))
-        with open('{}_perSpk.txt', 'w') as fout:
+        with open('{}_perSpk.txt'.format(uri), 'w') as fout:
             correct, FA_spk, FA_spch, miss_spk, miss_spch = results[uri]
             for spk in correct: 
+                if vad:
+                    FA_spk[spk] = numpy.nan
+                    miss_spk[spk] = numpy.nan
                 fout.write('{}:'
                           ' ________________________________________________________________ \n' 
                           '|        |              |               Reference                |\n'
@@ -163,8 +171,11 @@ def main():
 
         r_labels = {lab: r_annot.label_timeline(lab) for lab in r_annot.labels()}
         s_labels = {lab: s_annot.label_timeline(lab) for lab in s_annot.labels()}
-
-        mapping = get_mapping(r_annot, s_annot)
+        
+        if not args.vad:
+            mapping = get_mapping(r_annot, s_annot)
+        else:
+            mapping = None
         
         # accumulate results, reference side
         correct, miss_spk, miss_speech = accumulate_reference(r_labels, s_labels, mapping)
@@ -178,7 +189,7 @@ def main():
     # for each label (FEM, MAL, CHI, KCHI), measure the time
     # in Correct/False alarm Speaker, False alarm Speech/Missed speaker/
     # Missed Speech
-    write_evaluation(results)
+    write_evaluation(results, args.vad)
 
 
 if __name__ == '__main__': 
