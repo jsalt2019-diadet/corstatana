@@ -44,9 +44,31 @@ def get_mapping(reference, system):
 
     return mapping
 
-def get_speech_duration(reference):
+def get_speech_duration(annot, uri):
+    """ return the speech duration (counting overlapping segments only once)
 
-def accumulate_reference(r_labels, s_labels, mapping):
+    """
+    #if uri == 'namibia_uebn_20161112_19980':
+    #    ipdb.set_trace()
+    timeline = annot.get_timeline()
+    dur = 0
+    prev_on = timeline[0][0]
+    prev_off = timeline[0][1]
+    for i, (on, off) in enumerate(timeline):
+        if on > prev_off: 
+            dur += prev_off - prev_on
+            prev_on = on
+            prev_off = off
+        elif on < prev_off and off > prev_off:
+            prev_off = off
+            if i == len(timeline) - 1:
+                dur += prev_off - prev_on
+        elif i == len(timeline) - 1 and off <= prev_off:
+            dur += prev_off - prev_on
+    return dur
+
+
+def accumulate_reference(r_labels, s_labels, mapping, dur):
     """ Using the mapping, fill the first column of the results table"""
     correct = defaultdict(int)
     miss_spk = defaultdict(int)
@@ -67,9 +89,13 @@ def accumulate_reference(r_labels, s_labels, mapping):
             # iterate on segments in common in reference and system_silences
             for r, s_ in r_label.co_iter(s_label.gaps()):
                 miss_speech[r_spk] += (r & s_).duration
+
+            correct[r_spk] = correct[r_spk] / dur
+            miss_spk[r_spk] = miss_spk[r_spk] / dur
+            miss_speech[r_spk] = miss_speech[r_spk] / dur
     return correct, miss_spk, miss_speech
 
-def  accumulate_system(r_labels, s_labels, mapping):
+def  accumulate_system(r_labels, s_labels, mapping, dur):
     """ Using the mapping, fill the first row of the results table"""
     correct = defaultdict(int)
     FA_spk = defaultdict(int)
@@ -90,6 +116,10 @@ def  accumulate_system(r_labels, s_labels, mapping):
             # iterate on segments in common in reference and system_silences
             for s, r_ in s_label.co_iter(r_label.gaps()):
                 FA_speech[r_spk] += (s & r_).duration
+
+            correct[r_spk] = correct[r_spk] / dur
+            FA_spk[r_spk] = FA_spk[r_spk] / dur
+            FA_speech[r_spk] = FA_speech[r_spk] / dur
 
 
     return correct, FA_spk, FA_speech
@@ -122,11 +152,11 @@ def write_evaluation(results, vad):
                           '|________|______________|________________________________________|\n'
                           '|        |              | Speaker   | other speaker | no speaker |\n'
                           '|________|______________|___________|_______________|____________|\n'
-                          '|        |   Speaker    | {:.4f}   | {:.4f}  | {:.4f} |\n'
+                          '|        |   Speaker    | {:.4f}    |    {:.4f}     | {:.4f}     |\n'
                           '|        |______________|___________|_______________|____________|\n'
-                          '| System | Other Speaker| {:.4f}|    NA      |   NA    |\n'
+                          '| System | Other Speaker| {:.4f}    |       NA      |      NA    |\n'
                           '|        |______________|___________|_______________|____________|\n'
-                          '|        |  No Speaker  | {:.4f} |    NA      |   NA    |\n'
+                          '|        |  No Speaker  | {:.4f}    |       NA      |      NA    |\n'
                           '|________|______________|___________|_______________|____________|\n'.format(spk, correct[spk], FA_spk[spk],
                               FA_spch[spk], miss_spk[spk], miss_spch[spk]))
                           
@@ -178,10 +208,13 @@ def main():
             mapping = None
         
         # accumulate results, reference side
-        correct, miss_spk, miss_speech = accumulate_reference(r_labels, s_labels, mapping)
+        dur = get_speech_duration(r_annot, uri)
+        print(uri)
+        print(dur)
+        correct, miss_spk, miss_speech = accumulate_reference(r_labels, s_labels, mapping, dur)
         
         # Both "correct" should be the same
-        _, FA_spk, FA_speech = accumulate_system(r_labels, s_labels, mapping)
+        _, FA_spk, FA_speech = accumulate_system(r_labels, s_labels, mapping, dur)
 
         results[uri] = (correct, FA_spk, FA_speech, miss_spk, miss_speech)
     # evaluate each wav referenced in system:
