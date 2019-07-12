@@ -1,0 +1,13 @@
+name: jsalt19spkdetect
+title: jsalt19spkdetect
+username:
+account: acristia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1025611
+bundleId: 2222938
+url: https://acristia.shinyapps.io/jsalt19spkdetect/
+when: 1562874058.2549
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: jsalt19-spkdiar.xlsx

@@ -39,6 +39,7 @@ for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(
 #descriptors per file
 datf=NULL
 for(j in allres[grep("perSpeaker",allres,invert=T)])  datf=rbind(datf,cbind(j,read.csv(paste0("../computation/results/",j))))
+datf$cor=gsub("_.*","",datf$j)
 
 #descriptors per speaker
 merge(datsp,ages,by.x="file",by.y="basename",all.x=T)->datsp
