@@ -5,10 +5,10 @@
 ### TODO
 
 # i did the following to get the file lists
-# grep "Mix" ../system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_ami_eval_Mix-Headset/plda_scores_tbest/result.pyannote-der | grep -v "arn" | cut -f 1 -d " " > ami_test.txt
-# grep "jsalt" ../system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdet_sri_eval_test/plda_scores_tbest/result.pyannote-der | grep -v "arn" | cut -f 1 -d " " > sri_test.txt
-# grep "_" ../system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdet_babytrain_eval_test/plda_scores_tbest/result.pyannote-der  | grep -v "arn" | cut -f 1 -d " " > babytrain_test.txt
-# grep "_U01" ../system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_chime5_eval_U01/plda_scores_tbest/result.pyannote-der  | grep -v "arn" | cut -f 1 -d " " > chime5_test.txt
+ # grep "Mix" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_ami_eval_Mix-Headset/plda_scores_tbest/result.pyannote-der | grep -v "arn" | cut -f 1 -d " " > ami_test.txt
+ # grep "jsalt" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdet_sri_eval_test/plda_scores_tbest/result.pyannote-der | grep -v "arn" | cut -f 1 -d " " > sri_test.txt
+ # grep "_" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdet_babytrain_eval_test/plda_scores_tbest/result.pyannote-der  | grep -v "arn" | cut -f 1 -d " " > babytrain_test.txt
+ # grep "_U01" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_chime5_eval_U01/plda_scores_tbest/result.pyannote-der  | grep -v "arn" | cut -f 1 -d " " > chime5_test.txt
 
 # Also, files should be clean, with no warnings: so have the demon do:
   # find ./ -name result.pyannote* > res.txt
@@ -23,6 +23,9 @@
   # done
 
 # And also in R
+#read file list
+# fl=NULL
+# for(f in dir(pattern="test.txt"))    fl <- rbind(fl,cbind(f,read.table(f)))
 # mydir="../system_eval/output_rttms/"
 # allres=NULL
 # for(res in dir(mydir, recursive=T,pattern="clean.pyannote")){
@@ -49,8 +52,9 @@
 
 
 library(shiny)
-library(readr)
-library("dplyr")
+library(RCurl)
+
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -74,7 +78,7 @@ ui <- fluidPage(
           "task",
           "task",
           c("Diarization" = "diar",
-            "Detection" = "det"
+            "VAD" = "det"
           )
         ),
         checkboxInput("noGT", "Remove systems based on ground truth VAD",FALSE)
@@ -90,12 +94,9 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  #read file list
-  fl=NULL
-  for(f in dir(pattern="test.txt"))    fl <- rbind(fl,cbind(f,read.table(f)))
-  
-  read.table("allres.txt",header=T)->allres
 
+  x <- getURL("https://raw.githubusercontent.com/jsalt-coml/corstatana/master/demon/allres.txt")
+  allres <- read.csv(text = x)
 
    output$rank <- renderPlot({
      # generate bins based on input$bins from ui.R
