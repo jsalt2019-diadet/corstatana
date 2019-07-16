@@ -9,7 +9,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(readr)
+library(scales)
 ```
 
 ## A first attempt
@@ -24,6 +25,7 @@ We read in background data (only exists for babytrain), data describing files an
 ```{r readin-descriptors}
 # options(warn=2) for debugging, then options(warn=1)
 
+#background information (only available for babytrain)
 read.csv("../BabyTrain_ages.csv")->ages
 ages[ages$corpus!="corpus",]->ages
 ages$age=as.numeric(as.character(ages$age))
@@ -37,44 +39,65 @@ for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(
 #descriptors per file
 datf=NULL
 for(j in allres[grep("perSpeaker",allres,invert=T)])  datf=rbind(datf,cbind(j,read.csv(paste0("../computation/results/",j))))
+datf$cor=gsub("_.*","",datf$j)
 
+#descriptors per speaker
 merge(datsp,ages,by.x="file",by.y="basename",all.x=T)->datsp
 merge(datf,ages,by.x="file",by.y="basename",all.x=T)->datf
 
+#show dimensions and summary of the 2 datasets
 dim(datsp)
 summary(datsp)
 dim(datf)
 summary(datf)
 ```
 
-### Read in system data **HUMAN LOOK HERE**
+### Read in system data 
 
+**HUMAN LOOK HERE**
 Typically you WILL need to change line 50 below, so that you read in your own system results. Please use pyannote.metrics to generate your results. They should be space separated 
-
+**HUMAN LOOK HERE**
 ```{r readin-eval}
-library(readr)
-out <- read_table("../system_eval/BabyTrain_ConvRNN.txt", comment = "--")
+file_eval <- read_table("../system_eval/BabyTrain_ConvRNN.txt", comment = "--")
+dim(file_eval)
+summary(file_eval)
 
-dim(out)
-summary(out)
-merge(out,datf,all=T)->out
+#the first col must be renamed
+colnames(file_eval)[1]<-"file"
 
-summary(out)
+
+#you may also want to rename some variables into something that is more readable
+colnames(file_eval)[colnames(file_eval)=="%"]<-"fa.pc"
+colnames(file_eval)[colnames(file_eval)=="%_1"]<-"miss.pc"
+
 ```
 
 
-The table out has a combination of results and descriptors at the level of files.
+### Combine descriptor and system data 
 
-### Explaining misses and false alarms across files based on file characteristics (Marvin VAD on BabyTrain - 5 class, old architecture)
 
-A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file and only for BabyTrain because that's what I drew results for. We only have false alarms and misses because we are looking at a VAD system. (In particular, this is Marvin's system for last week.)
+If all goes well, you won't need to change this section. After this code, the table file_eval has a combination of results and descriptors at the level of files.
 
-```{r spl,fig.height=10}
+```{r mrg}
+
+merge(file_eval,datf,all.x=T)->file_eval
+
+dim(file_eval) #**human** check that the number of rows (first number) outputted here is the same as that in line 61.
+summary(file_eval)
+```
+
+Now you are ready to do some inspection. You can turn chunks off by adding ", eval=F" (e.g. {r spl,fig.height=10} below, it would become {r spl,fig.height=10, eval=F}) 
+
+### Example of analysis: Explaining misses and false alarms across files based on file characteristics (Marvin VAD on BabyTrain - 5 class, old architecture)
+
+A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file and only for BabyTrain because that's what I drew results for. We only have false alarms and misses because we are looking at a VAD system. (In particular, this is Marvin's system for week 1.)
+
+```{r spl,fig.height=10,eval=F}
 
 library(lattice)
 selected=c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
 selnames=gsub(".","\n",gsub("_","\n",selected),fixed=T)
-splom(out[c(selected)],pch=".",groups=out$corpus,varnames=selnames,auto.key = list(columns = 3),axis.line.tck = -.5, axis.text.lineheight=0,
+splom(file_eval[c(selected)],pch=".",groups=file_eval$corpus,varnames=selnames,auto.key = list(columns = 3),axis.line.tck = -.5, axis.text.lineheight=0,
 panel = function(x, y, ...) {
            panel.xyplot(x, y, ...)
           fm <- lm(y ~ x)
@@ -94,3 +117,130 @@ Focus on the last two rows, which show the correlations between percent misses (
 So focusing on the last row, false alarms look unrelated to all of these predictors, although this may be because the scale is too large.
 
 One row up, misses does not relate to proportion overlap or number of different speakers, but is anticorrelated with the duration of speech, child age, and SNR.
+
+### Example of analysis 2: ConvRNN version 
+
+You can also focus on specific outcome and predictor variables and trim their distribution to see them more clearly.
+
+```{r indiv-plots}
+
+cor_color=rainbow(length(levels(factor(file_eval$corpus)))) #get different colors for diff datasets
+names(cor_color)<-levels(factor(file_eval$corpus))
+
+file_eval_metrics=c("fa.pc","miss.pc")
+predictors=c("total","clip_length","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
+
+for(thismet in file_eval_metrics){ 
+  iqr=IQR(file_eval[,thismet])
+  med=median(file_eval[,thismet])
+  no_outliers=file_eval[file_eval[,thismet]<med+1.5*iqr,]
+  print(paste("removing",dim(file_eval)[1]-dim(no_outliers)[1], "outliers in",thismet,"specifically the following files:"))
+  print(file_eval[file_eval[,thismet]>=med+1.5*iqr,"file"])
+  for(thispred in predictors){
+    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=thismet)
+    abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))
+    print(summary(lm(no_outliers[,thismet]~no_outliers[,thispred])))
+    if(max(no_outliers[,thismet])>300){
+        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
+    abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))      
+    }
+  }
+}
+
+
+```
+
+Messages I take away from this:
+
+*For FA rate*
+
+- no sig rel with total speech duration
+- sig lower FA for longer files
+- no sig rel with proportion of overlapping speech
+- sig higher FA for files with shorter voc duration
+- sig lower FA for files from older children
+- sig lower FA for files with higher SNR
+- sig higher FA when higher number of different speakers
+
+
+*For miss rate*
+
+- no sig rel with total speech duration
+- sig lower FA for longer files
+- trend for higher miss for files with higher prop overlapping speech
+- sig lower miss for files with longer voc dur
+- sig fewer misses for files from older children
+- sig fewer misses for files with higher SNR
+- sig higher miss when more speakers
+
+#### ConvRNN version continued, now excluding Tsay and Paido
+
+```{r npnt}
+
+# subanalyses without paido and tsay
+
+print("**removing paido and tsay**")
+
+npnt=file_eval[!(file_eval$corpus %in% c("tsay","paido")),]
+
+for(thismet in file_eval_metrics){ 
+  iqr=IQR(npnt[,thismet])
+  med=median(npnt[,thismet])
+  no_outliers=npnt[npnt[,thismet]<med+1.5*iqr,]
+  print(paste("removing",dim(npnt)[1]-dim(no_outliers)[1], "outliers in",thismet))
+  for(thispred in predictors){
+    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=thismet)
+    abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))
+     print(summary(lm(no_outliers[,thismet]~no_outliers[,thispred])))
+   if(max(no_outliers[,thismet])>300){
+        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
+    abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))      
+    }
+  }
+}
+```
+
+Messages that go away or remain when we excluded paido and tsay:
+
+*For FA rate*
+
+- no sig rel with total speech duration --> the same
+- sig lower FA for longer files --> the same
+- no sig rel with proportion of overlapping speech  --> NO, lower FA for studies with a higher proportion of overlapping speech
+- sig higher FA for files with shorter voc duration -->  --> NO, the opposite
+- sig lower FA for files from older children --> NO, stable
+- sig lower FA for files with higher SNR --> NO, stable
+- sig higher FA when higher number of different speakers --> NO, stable
+
+
+*For miss rate*
+
+- no sig rel with total speech duration --> the same
+- sig lower FA for longer files --> the same
+- slight higher miss for files with higher prop overlapping speech --> NO, stable
+- sig lower miss for files with longer voc dur  --> NO, opposite: higher miss for files with longer voc dur
+- sig fewer misses for files from older children --> the same
+- sig fewer misses for files with higher SNR --> NO, opposite: higher miss for files with higher SNR
+- sig higher miss when more speakers --> NO, opposite: lower miss for files with more speakers
+
+#### ConvRNN version continued, checking whether subcorpora differences can be explained away via these other variables
+
+We see that many effects are different when paido and tsay are removed. This suggest that some of the apparent correlations are driven by subcorpus differences. So in this section we check whether subcorpus adds any explanatory power once clip diffs are already captured by the other methods
+
+```{r lmcomp, eval=F}
+
+for(thismet in file_eval_metrics){ 
+  iqr=IQR(file_eval[,thismet])
+  med=median(file_eval[,thismet])
+  no_outliers=file_eval[file_eval[,thismet]<med+1.5*iqr,]
+  #print(paste("removing",dim(file_eval)[1]-dim(no_outliers)[1], "outliers in",thismet))
+  for(thispred in predictors){
+     print(paste("Regressions with and without corpus for",thismet,"and",thispred))
+   basemodel=lm(file_eval[,thismet]~file_eval[,thispred],subset=c(!is.na(file_eval[,"corpus"])))
+    withcor=lm(file_eval[,thismet]~file_eval[,thispred]+file_eval[,"corpus"])
+    print(summary(basemodel))
+    print(summary(withcor))
+    print(anova(basemodel,withcor))
+  }
+}
+```
