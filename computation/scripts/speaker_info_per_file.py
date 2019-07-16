@@ -381,7 +381,7 @@ def main():
                         help='(Optional) enable to link only test rttm, and not whole corpus.')
     parser.add_argument('--local_snr', action='store_true',
                         help='if enabled, compute only local snr')
-    pars.add_argument('--SRI_far', action='store_true',
+    parser.add_argument('--SRI_far', action='store_true',
                         help='if analysing the SRI corpus, enable to take FAR field '
                              'instead of close field')
 
