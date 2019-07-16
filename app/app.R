@@ -3,6 +3,8 @@
 # alecristia@gmail.Com
 
 ### TODO
+# add talker detection
+# incorporate name+description using accompanying txt file
 
 # i did the following to get the file lists
  # grep "Mix" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_ami_eval_Mix-Headset/plda_scores_tbest/result.pyannote-der | grep -v "arn" | cut -f 1 -d " " > ami_test.txt
@@ -10,45 +12,6 @@
  # grep "_" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdet_babytrain_eval_test/plda_scores_tbest/result.pyannote-der  | grep -v "arn" | cut -f 1 -d " " > babytrain_test.txt
  # grep "_U01" /export/fs01/jsalt19/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_chime5_eval_U01/plda_scores_tbest/result.pyannote-der  | grep -v "arn" | cut -f 1 -d " " > chime5_test.txt
 
-# Also, files should be clean, with no warnings: so have the demon do:
-  # find ./ -name result.pyannote* > res.txt
-  # cat res.txt | while read -r line ; do
-  # clean=`echo $line | sed "s/result/clean/"`
-  # wn=`grep "hypoth" $line | wc -l | awk '{print $1}'`
-  # #echo $wn
-  # if [ $wn -eq 0 ] ; then
-  # #echo $clean
-  #   grep -v "arn" $line > $clean
-  # fi
-  # done
-
-# And also in R
-#read file list
-# fl=NULL
-# for(f in dir(pattern="test.txt"))    fl <- rbind(fl,cbind(f,read.table(f)))
-# mydir="../system_eval/output_rttms/"
-# allres=NULL
-# for(res in dir(mydir, recursive=T,pattern="clean.pyannote")){
-#   file_eval <- read_table(paste0(mydir,res), comment = "--")
-# 
-#   #the first col must be renamed
-#   colnames(file_eval)[1]<-"file"
-# 
-#   #standardize out
-#   if(length(grep("diarization",colnames(file_eval)))==1) {
-#     colnames(file_eval)[grep("diarization",colnames(file_eval))]<-"main"
-#     task="diar"} else {
-#       colnames(file_eval)[grep("detection",colnames(file_eval))]<-"main"
-#       task="det"}
-#   #clean and write
-#   file_eval=subset(file_eval,main!="Total")
-#   allres=rbind(allres,cbind(as.data.frame(file_eval)[,c("file","main")],res,task))
-# } #allres has 24108 obs
-# allres=merge(allres,fl,by.x="file",by.y="V1",all=T)
-# allres$corpus=gsub("_.*","",allres$f)
-# for(thisc in c("babytrain","ami","chime5","sri")) allres$main=gsub(thisc,"",allres$main)
-# allres[!is.na(allres$corpus),]->allres #attn removing files not assigned to a corpus we go from 23k to 9k results
-# write.table(allres,"allres.txt",row.names = F)
 
 
 library(shiny)
@@ -95,8 +58,11 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-  x <- getURL("https://raw.githubusercontent.com/jsalt-coml/corstatana/master/demon/allres.txt")
-  allres <- read.csv(text = x)
+  myurl <- getURL("https://raw.githubusercontent.com/jsalt-coml/corstatana/master/demon/allres.txt")
+  allres <- read.csv(text = myurl)
+  allres$res=as.character(allres$res)
+  for(thisc in levels(allres$corpus)) allres$res=gsub(thisc,"",allres$res)
+  allres$res=gsub("_clean.*","",allres$res)
 
    output$rank <- renderPlot({
      # generate bins based on input$bins from ui.R
