@@ -192,7 +192,7 @@ def measure_overlap(annot, info):
 
             dur_speech += off - on
             dur_speech_perSpk[lab] += off - on
-            all_vocs.append(dur_speech)
+            all_vocs.append(off - on)
 
             prev_on = on
             prev_off = off
