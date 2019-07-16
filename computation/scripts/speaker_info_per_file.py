@@ -381,6 +381,9 @@ def main():
                         help='(Optional) enable to link only test rttm, and not whole corpus.')
     parser.add_argument('--local_snr', action='store_true',
                         help='if enabled, compute only local snr')
+    pars.add_argument('--SRI_far', action='store_true',
+                        help='if analysing the SRI corpus, enable to take FAR field '
+                             'instead of close field')
 
     args = parser.parse_args()
 
@@ -389,21 +392,26 @@ def main():
     corpus_name = os.path.basename(os.path.abspath(args.corpus))
 
     ## for me, on oberon...
-    if corpus_name == "BabyTrain_new": 
+    if corpus_name == "BabyTrain_new":
         corpus_name = "BabyTrain"
+    elif corpus_name == "SRI" and args.SRI_far:
+        corpus_name = 'SRI_far'
 
     corpus2rttm = {'CHiME5': 'allU01_{}.rttm',
                    'AMI': 'allMix-Headset_{}.rttm',
-                   'BabyTrain': 'all_{}.rttm'}
+                   'BabyTrain': 'all_{}.rttm',
+                   'SRI': 'close_{}.rttm',
+                   'SRI_far': 'far_{}.rttm'}
 
     if args.local_snr:
         for subset in ['train', 'dev', 'test']:
-
+            if "SRI" in corpus_name and subset == "train":
+                continue
             # read annotations
             rttm = os.path.join(args.corpus, subset,
                                 corpus2rttm[corpus_name].format(subset))
             annot = parse_rttms(rttm)
-            vad = vad_no_ovl(annot) 
+            vad = vad_no_ovl(annot)
             info = defaultdict(list)
 
             info = get_wav_len(annot, args.corpus, subset, info)
@@ -445,20 +453,20 @@ def main():
             corpus_name = corpus_name + "_system"
             # read annotations
             annot = parse_rttms(args.rttm)
-                                                                     
+
             # get wav info
             info = defaultdict(list)
             info = get_wav_len(annot, args.corpus, subset, info)
-                                                                     
+
             # get speakers info
             info = count_labels(annot, info)
-                                                                     
+
             # measure overlap
             info, info_perSpk = measure_overlap(annot, info)
-                                                                     
+
             # write output
             write_info_per_file(corpus_name, subset, info)
             write_info_per_speaker(corpus_name, subset, info_perSpk)
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     main()
