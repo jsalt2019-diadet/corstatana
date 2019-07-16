@@ -60,7 +60,7 @@ def parse_rttms(rttm):
                   of the set
         OUTPUT
         ------
-            annot: a dict {file : [(onset, offset, label)]} where, for each file, 
+            annot: a dict {file : [(onset, offset, label)]} where, for each file, 
                    the list is order by onsets and offsets
     """
     assert os.path.isfile(rttm), '{} does not exist! exiting...'.format(rttm)
