@@ -1,22 +1,14 @@
-!CHI_WW25: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.3169    |    nan     | 1.1472     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0270    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-UA1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.7661    |    nan     | 0.7178     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0219    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_WW25|speaker|speaker|0.3168978446392008
+!CHI_WW25|speaker|other-speaker|nan
+!CHI_WW25|speaker|no-speaker|0.02702827042072105
+!CHI_WW25|other-speaker|speaker|nan
+!CHI_WW25|other-speaker|other-speaker|NA
+!CHI_WW25|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+UA1|speaker|speaker|0.766142203206587
+UA1|speaker|other-speaker|nan
+UA1|speaker|no-speaker|0.02188139764911622
+UA1|other-speaker|speaker|nan
+UA1|other-speaker|other-speaker|NA
+UA1|other-speaker|no-speaker|NA

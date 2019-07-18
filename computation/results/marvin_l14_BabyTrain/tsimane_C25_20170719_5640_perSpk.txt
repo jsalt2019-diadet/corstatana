@@ -1,11 +1,7 @@
-C1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 1.2111    |    nan     | 1.1729     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.8801    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+C1|speaker|speaker|1.2110983981693377
+C1|speaker|other-speaker|nan
+C1|speaker|no-speaker|0.8800707301851453
+C1|other-speaker|speaker|nan
+C1|other-speaker|other-speaker|NA
+C1|other-speaker|no-speaker|NA

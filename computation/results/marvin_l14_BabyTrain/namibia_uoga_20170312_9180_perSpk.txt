@@ -1,22 +1,14 @@
-!CHI_uoga: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0000    |    nan     | 0.0000     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1192    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MOT*: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9268    |    nan     | 0.0266     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0386    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_uoga|speaker|speaker|0.0
+!CHI_uoga|speaker|other-speaker|nan
+!CHI_uoga|speaker|no-speaker|0.11922781436297172
+!CHI_uoga|other-speaker|speaker|nan
+!CHI_uoga|other-speaker|other-speaker|NA
+!CHI_uoga|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MOT*|speaker|speaker|0.9267620617557242
+MOT*|speaker|other-speaker|nan
+MOT*|speaker|no-speaker|0.03861472508230811
+MOT*|other-speaker|speaker|nan
+MOT*|other-speaker|other-speaker|NA
+MOT*|other-speaker|no-speaker|NA

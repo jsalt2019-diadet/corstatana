@@ -1,11 +1,7 @@
-!CHI_j17m4b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9292    |    nan     | 0.0055     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0903    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j17m4b|speaker|speaker|0.9292315665217521
+!CHI_j17m4b|speaker|other-speaker|nan
+!CHI_j17m4b|speaker|no-speaker|0.09031756542769016
+!CHI_j17m4b|other-speaker|speaker|nan
+!CHI_j17m4b|other-speaker|other-speaker|NA
+!CHI_j17m4b|other-speaker|no-speaker|NA

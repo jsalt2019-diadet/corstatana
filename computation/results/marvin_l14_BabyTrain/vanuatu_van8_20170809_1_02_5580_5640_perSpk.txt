@@ -1,22 +1,14 @@
-!CHI_van8: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.5022    |    nan     | 0.0833     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.3359    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MOT*: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0368    |    nan     | 0.1330     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1459    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_van8|speaker|speaker|0.5022383688249591
+!CHI_van8|speaker|other-speaker|nan
+!CHI_van8|speaker|no-speaker|0.33587842363875225
+!CHI_van8|other-speaker|speaker|nan
+!CHI_van8|other-speaker|other-speaker|NA
+!CHI_van8|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MOT*|speaker|speaker|0.03681077996429505
+MOT*|speaker|other-speaker|nan
+MOT*|speaker|no-speaker|0.14587283926684272
+MOT*|other-speaker|speaker|nan
+MOT*|other-speaker|other-speaker|NA
+MOT*|other-speaker|no-speaker|NA

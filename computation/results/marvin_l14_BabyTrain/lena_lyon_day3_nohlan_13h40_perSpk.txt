@@ -1,44 +1,28 @@
-!CHI_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.3976    |    nan     | 0.4217     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1048    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!FAT_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.3476    |    nan     | 0.4762     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0843    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0506    |    nan     | 0.0414     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0165    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-FEM: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2293    |    nan     | 0.5767     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0590    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_nohlan|speaker|speaker|0.3976451945754718
+!CHI_nohlan|speaker|other-speaker|nan
+!CHI_nohlan|speaker|no-speaker|0.104786998820755
+!CHI_nohlan|other-speaker|speaker|nan
+!CHI_nohlan|other-speaker|other-speaker|NA
+!CHI_nohlan|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!FAT_nohlan|speaker|speaker|0.3476470371462263
+!FAT_nohlan|speaker|other-speaker|nan
+!FAT_nohlan|speaker|no-speaker|0.0843252505896227
+!FAT_nohlan|other-speaker|speaker|nan
+!FAT_nohlan|other-speaker|other-speaker|NA
+!FAT_nohlan|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_nohlan|speaker|speaker|0.050569354363207614
+!MOT_nohlan|speaker|other-speaker|nan
+!MOT_nohlan|speaker|no-speaker|0.016500221108490545
+!MOT_nohlan|other-speaker|speaker|nan
+!MOT_nohlan|other-speaker|other-speaker|NA
+!MOT_nohlan|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+FEM|speaker|speaker|0.22928950471698073
+FEM|speaker|other-speaker|nan
+FEM|speaker|no-speaker|0.0590359669811324
+FEM|other-speaker|speaker|nan
+FEM|other-speaker|other-speaker|NA
+FEM|other-speaker|no-speaker|NA

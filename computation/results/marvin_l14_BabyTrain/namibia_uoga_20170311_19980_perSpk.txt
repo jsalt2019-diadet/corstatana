@@ -1,33 +1,21 @@
-FA1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2460    |    nan     | 0.4856     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1137    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MOT*: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.4304    |    nan     | 0.4466     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0925    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-UU: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2553    |    nan     | 0.5712     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0628    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+FA1|speaker|speaker|0.24598033332167912
+FA1|speaker|other-speaker|nan
+FA1|speaker|no-speaker|0.11371827482068135
+FA1|other-speaker|speaker|nan
+FA1|other-speaker|other-speaker|NA
+FA1|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MOT*|speaker|speaker|0.43038974594633456
+MOT*|speaker|other-speaker|nan
+MOT*|speaker|no-speaker|0.09247325734842109
+MOT*|other-speaker|speaker|nan
+MOT*|other-speaker|other-speaker|NA
+MOT*|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+UU|speaker|speaker|0.2552716880330401
+UU|speaker|other-speaker|nan
+UU|speaker|no-speaker|0.0627784449287116
+UU|other-speaker|speaker|nan
+UU|other-speaker|other-speaker|NA
+UU|other-speaker|no-speaker|NA

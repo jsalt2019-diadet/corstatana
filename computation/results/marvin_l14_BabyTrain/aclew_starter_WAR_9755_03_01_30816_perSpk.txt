@@ -1,33 +1,21 @@
-!CHI_9755: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0741    |    nan     | 0.3548     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0083    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_9755: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2018    |    nan     | 0.4788     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0331    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MA1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.6876    |    nan     | 0.4794     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0445    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_9755|speaker|speaker|0.07413793103448288
+!CHI_9755|speaker|other-speaker|nan
+!CHI_9755|speaker|no-speaker|0.008312807881773365
+!CHI_9755|other-speaker|speaker|nan
+!CHI_9755|other-speaker|other-speaker|NA
+!CHI_9755|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_9755|speaker|speaker|0.201847290640394
+!MOT_9755|speaker|other-speaker|nan
+!MOT_9755|speaker|no-speaker|0.03312807881773387
+!MOT_9755|other-speaker|speaker|nan
+!MOT_9755|other-speaker|other-speaker|NA
+!MOT_9755|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MA1|speaker|speaker|0.6875615763546801
+MA1|speaker|other-speaker|nan
+MA1|speaker|no-speaker|0.04445812807881759
+MA1|other-speaker|speaker|nan
+MA1|other-speaker|other-speaker|NA
+MA1|other-speaker|no-speaker|NA

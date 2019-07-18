@@ -1,11 +1,7 @@
-!CHI_j24f3b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9613    |    nan     | 0.0119     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0530    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j24f3b|speaker|speaker|0.9613172115430322
+!CHI_j24f3b|speaker|other-speaker|nan
+!CHI_j24f3b|speaker|no-speaker|0.05304026749916885
+!CHI_j24f3b|other-speaker|speaker|nan
+!CHI_j24f3b|other-speaker|other-speaker|NA
+!CHI_j24f3b|other-speaker|no-speaker|NA

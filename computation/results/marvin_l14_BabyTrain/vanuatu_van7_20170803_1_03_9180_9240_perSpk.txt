@@ -1,55 +1,35 @@
-!CHI_van7: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1157    |    nan     | 0.4631     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.2777    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MA1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1519    |    nan     | 0.0633     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0560    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MA2: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0650    |    nan     | 0.0000     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0772    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MOT*: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0767    |    nan     | 0.0268     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0443    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-UU: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1978    |    nan     | 0.2168     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0112    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_van7|speaker|speaker|0.11574681181431966
+!CHI_van7|speaker|other-speaker|nan
+!CHI_van7|speaker|no-speaker|0.27766524504398654
+!CHI_van7|other-speaker|speaker|nan
+!CHI_van7|other-speaker|other-speaker|NA
+!CHI_van7|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MA1|speaker|speaker|0.15186208223693048
+MA1|speaker|other-speaker|nan
+MA1|speaker|no-speaker|0.05598085101451132
+MA1|other-speaker|speaker|nan
+MA1|other-speaker|other-speaker|NA
+MA1|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MA2|speaker|speaker|0.0649561214585001
+MA2|speaker|other-speaker|nan
+MA2|speaker|no-speaker|0.07720560065645934
+MA2|other-speaker|speaker|nan
+MA2|other-speaker|other-speaker|NA
+MA2|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MOT*|speaker|speaker|0.07669970907719507
+MOT*|speaker|other-speaker|nan
+MOT*|speaker|no-speaker|0.044303405917848794
+MOT*|other-speaker|speaker|nan
+MOT*|other-speaker|other-speaker|NA
+MOT*|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+UU|speaker|speaker|0.19783302838052932
+UU|speaker|other-speaker|nan
+UU|speaker|no-speaker|0.011206209232765631
+UU|other-speaker|speaker|nan
+UU|other-speaker|other-speaker|NA
+UU|other-speaker|no-speaker|NA

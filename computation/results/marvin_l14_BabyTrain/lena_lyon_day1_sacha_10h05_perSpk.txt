@@ -1,33 +1,21 @@
-!CHI_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0675    |    nan     | 0.0459     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0891    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!FAT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2544    |    nan     | 0.4049     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.2889    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.3337    |    nan     | 0.3073     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.6012    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_sacha|speaker|speaker|0.06751096983918278
+!CHI_sacha|speaker|other-speaker|nan
+!CHI_sacha|speaker|no-speaker|0.08912335591095442
+!CHI_sacha|other-speaker|speaker|nan
+!CHI_sacha|other-speaker|other-speaker|NA
+!CHI_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!FAT_sacha|speaker|speaker|0.2543782278509102
+!FAT_sacha|speaker|other-speaker|nan
+!FAT_sacha|speaker|no-speaker|0.2889214332074091
+!FAT_sacha|other-speaker|speaker|nan
+!FAT_sacha|other-speaker|other-speaker|NA
+!FAT_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_sacha|speaker|speaker|0.33365507830051905
+!MOT_sacha|speaker|other-speaker|nan
+!MOT_sacha|speaker|no-speaker|0.6011693765359182
+!MOT_sacha|other-speaker|speaker|nan
+!MOT_sacha|other-speaker|other-speaker|NA
+!MOT_sacha|other-speaker|no-speaker|NA

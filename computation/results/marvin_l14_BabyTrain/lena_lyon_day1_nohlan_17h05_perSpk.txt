@@ -1,33 +1,21 @@
-!CHI_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0661    |    nan     | 0.9926     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0380    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.8821    |    nan     | 0.5298     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0806    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-OCH: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2011    |    nan     | 0.9994     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0791    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_nohlan|speaker|speaker|0.06612353164077327
+!CHI_nohlan|speaker|other-speaker|nan
+!CHI_nohlan|speaker|no-speaker|0.038028473989064775
+!CHI_nohlan|other-speaker|speaker|nan
+!CHI_nohlan|other-speaker|other-speaker|NA
+!CHI_nohlan|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_nohlan|speaker|speaker|0.8821252638986635
+!MOT_nohlan|speaker|other-speaker|nan
+!MOT_nohlan|speaker|no-speaker|0.08063119146862956
+!MOT_nohlan|other-speaker|speaker|nan
+!MOT_nohlan|other-speaker|other-speaker|NA
+!MOT_nohlan|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+OCH|speaker|speaker|0.20114491419910163
+OCH|speaker|other-speaker|nan
+OCH|speaker|no-speaker|0.07914253234450269
+OCH|other-speaker|speaker|nan
+OCH|other-speaker|other-speaker|NA
+OCH|other-speaker|no-speaker|NA

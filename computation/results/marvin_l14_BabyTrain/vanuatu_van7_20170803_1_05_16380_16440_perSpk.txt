@@ -1,11 +1,7 @@
-!CHI_van7: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 1.2781    |    nan     | 0.4220     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.4322    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_van7|speaker|speaker|1.278086731018585
+!CHI_van7|speaker|other-speaker|nan
+!CHI_van7|speaker|no-speaker|0.43218556403976466
+!CHI_van7|other-speaker|speaker|nan
+!CHI_van7|other-speaker|other-speaker|NA
+!CHI_van7|other-speaker|no-speaker|NA

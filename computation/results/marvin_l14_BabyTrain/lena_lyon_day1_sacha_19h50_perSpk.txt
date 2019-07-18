@@ -1,44 +1,28 @@
-!CHI_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.4079    |    nan     | 0.4137     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0569    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!FAT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1321    |    nan     | 0.4979     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0113    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.6556    |    nan     | 0.2993     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1403    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-FEM: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0270    |    nan     | 0.4695     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0043    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_sacha|speaker|speaker|0.407889250271036
+!CHI_sacha|speaker|other-speaker|nan
+!CHI_sacha|speaker|no-speaker|0.0568926695021271
+!CHI_sacha|other-speaker|speaker|nan
+!CHI_sacha|other-speaker|other-speaker|NA
+!CHI_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!FAT_sacha|speaker|speaker|0.1320740555416563
+!FAT_sacha|speaker|other-speaker|nan
+!FAT_sacha|speaker|no-speaker|0.011295971978984251
+!FAT_sacha|other-speaker|speaker|nan
+!FAT_sacha|other-speaker|other-speaker|NA
+!FAT_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_sacha|speaker|speaker|0.6556292219164366
+!MOT_sacha|speaker|other-speaker|nan
+!MOT_sacha|speaker|no-speaker|0.14031356850971619
+!MOT_sacha|other-speaker|speaker|nan
+!MOT_sacha|other-speaker|other-speaker|NA
+!MOT_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+FEM|speaker|speaker|0.02697022767075308
+FEM|speaker|other-speaker|nan
+FEM|speaker|no-speaker|0.00430322742056538
+FEM|other-speaker|speaker|nan
+FEM|other-speaker|other-speaker|NA
+FEM|other-speaker|no-speaker|NA

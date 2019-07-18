@@ -1,44 +1,28 @@
-!CHI_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.4322    |    nan     | 0.5019     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.2754    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!FAT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0553    |    nan     | 0.0774     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0148    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2471    |    nan     | 0.3351     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1792    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-FEM: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0271    |    nan     | 0.2553     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0095    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_sacha|speaker|speaker|0.4322411773836243
+!CHI_sacha|speaker|other-speaker|nan
+!CHI_sacha|speaker|no-speaker|0.27544483483610527
+!CHI_sacha|other-speaker|speaker|nan
+!CHI_sacha|other-speaker|other-speaker|NA
+!CHI_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!FAT_sacha|speaker|speaker|0.055299214042811164
+!FAT_sacha|speaker|other-speaker|nan
+!FAT_sacha|speaker|no-speaker|0.014801958543227745
+!FAT_sacha|other-speaker|speaker|nan
+!FAT_sacha|other-speaker|other-speaker|NA
+!FAT_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_sacha|speaker|speaker|0.24713203234136297
+!MOT_sacha|speaker|other-speaker|nan
+!MOT_sacha|speaker|no-speaker|0.17921093849214711
+!MOT_sacha|other-speaker|speaker|nan
+!MOT_sacha|other-speaker|other-speaker|NA
+!MOT_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+FEM|speaker|speaker|0.027071074799983403
+FEM|speaker|other-speaker|nan
+FEM|speaker|no-speaker|0.009454063130564672
+FEM|other-speaker|speaker|nan
+FEM|other-speaker|other-speaker|NA
+FEM|other-speaker|no-speaker|NA

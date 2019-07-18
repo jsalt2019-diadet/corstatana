@@ -1,44 +1,28 @@
-!CHI_uebn: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.5068    |    nan     | 0.0548     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1018    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-C1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0127    |    nan     | 0.0000     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0382    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-FA1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.4045    |    nan     | 0.5318     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0708    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-FA2: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0416    |    nan     | 0.0000     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0017    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_uebn|speaker|speaker|0.5068020297630498
+!CHI_uebn|speaker|other-speaker|nan
+!CHI_uebn|speaker|no-speaker|0.10182155784122401
+!CHI_uebn|other-speaker|speaker|nan
+!CHI_uebn|other-speaker|other-speaker|NA
+!CHI_uebn|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+C1|speaker|speaker|0.01267621424552367
+C1|speaker|other-speaker|nan
+C1|speaker|no-speaker|0.03820398344925963
+C1|other-speaker|speaker|nan
+C1|other-speaker|other-speaker|NA
+C1|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+FA1|speaker|speaker|0.40453748741414197
+FA1|speaker|other-speaker|nan
+FA1|speaker|no-speaker|0.07083116530362817
+FA1|other-speaker|speaker|nan
+FA1|other-speaker|other-speaker|NA
+FA1|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+FA2|speaker|speaker|0.04155985249752346
+FA2|speaker|other-speaker|nan
+FA2|speaker|no-speaker|0.001651705313336917
+FA2|other-speaker|speaker|nan
+FA2|other-speaker|other-speaker|NA
+FA2|other-speaker|no-speaker|NA

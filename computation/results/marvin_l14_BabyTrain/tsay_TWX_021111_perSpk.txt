@@ -1,55 +1,35 @@
-!CHI_TWX: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.3826    |    nan     | 0.6571     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0161    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!INV_Joyce: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.6499    |    nan     | 0.4165     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0159    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-GRF: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0014    |    nan     | 0.0000     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0001    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-GRM: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0136    |    nan     | 0.2639     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0020    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-OTH: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0100    |    nan     | 0.3328     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0000    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_TWX|speaker|speaker|0.38263886503383604
+!CHI_TWX|speaker|other-speaker|nan
+!CHI_TWX|speaker|no-speaker|0.016108986910402093
+!CHI_TWX|other-speaker|speaker|nan
+!CHI_TWX|other-speaker|other-speaker|NA
+!CHI_TWX|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!INV_Joyce|speaker|speaker|0.6498592038078819
+!INV_Joyce|speaker|other-speaker|nan
+!INV_Joyce|speaker|no-speaker|0.01590816406521872
+!INV_Joyce|other-speaker|speaker|nan
+!INV_Joyce|other-speaker|other-speaker|NA
+!INV_Joyce|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+GRF|speaker|speaker|0.001396951896762775
+GRF|speaker|other-speaker|nan
+GRF|speaker|no-speaker|8.015297768322823e-05
+GRF|other-speaker|speaker|nan
+GRF|other-speaker|other-speaker|NA
+GRF|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+GRM|speaker|speaker|0.013610151770984444
+GRM|speaker|other-speaker|nan
+GRM|speaker|no-speaker|0.0020099900557459622
+GRM|other-speaker|speaker|nan
+GRM|other-speaker|other-speaker|NA
+GRM|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+OTH|speaker|speaker|0.010040261457251568
+OTH|speaker|other-speaker|nan
+OTH|speaker|no-speaker|0.0
+OTH|other-speaker|speaker|nan
+OTH|other-speaker|other-speaker|NA
+OTH|other-speaker|no-speaker|NA

@@ -1,11 +1,7 @@
-!CHI_j20f3b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9710    |    nan     | 0.0394     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0445    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j20f3b|speaker|speaker|0.9709833729216154
+!CHI_j20f3b|speaker|other-speaker|nan
+!CHI_j20f3b|speaker|no-speaker|0.044541567695961806
+!CHI_j20f3b|other-speaker|speaker|nan
+!CHI_j20f3b|other-speaker|other-speaker|NA
+!CHI_j20f3b|other-speaker|no-speaker|NA

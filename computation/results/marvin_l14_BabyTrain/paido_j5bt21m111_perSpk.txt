@@ -1,11 +1,7 @@
-!CHI_j21m5b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9834    |    nan     | 0.0562     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0304    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j21m5b|speaker|speaker|0.9833948699915999
+!CHI_j21m5b|speaker|other-speaker|nan
+!CHI_j21m5b|speaker|no-speaker|0.03035808474476935
+!CHI_j21m5b|other-speaker|speaker|nan
+!CHI_j21m5b|other-speaker|other-speaker|NA
+!CHI_j21m5b|other-speaker|no-speaker|NA

@@ -1,11 +1,7 @@
-!CHI_j26m4b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9976    |    nan     | 0.0605     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0159    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j26m4b|speaker|speaker|0.9976367194712153
+!CHI_j26m4b|speaker|other-speaker|nan
+!CHI_j26m4b|speaker|no-speaker|0.015878291052768185
+!CHI_j26m4b|other-speaker|speaker|nan
+!CHI_j26m4b|other-speaker|other-speaker|NA
+!CHI_j26m4b|other-speaker|no-speaker|NA

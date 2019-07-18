@@ -1,33 +1,21 @@
-!CHI_TWX: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.4641    |    nan     | 0.5118     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0405    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!INV_Joyce: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.5447    |    nan     | 0.4508     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0407    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-OTH: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0013    |    nan     | 0.0004     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0002    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_TWX|speaker|speaker|0.46414226415330656
+!CHI_TWX|speaker|other-speaker|nan
+!CHI_TWX|speaker|no-speaker|0.04049103079927324
+!CHI_TWX|other-speaker|speaker|nan
+!CHI_TWX|other-speaker|other-speaker|NA
+!CHI_TWX|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!INV_Joyce|speaker|speaker|0.5446547638900637
+!INV_Joyce|speaker|other-speaker|nan
+!INV_Joyce|speaker|no-speaker|0.04072325048364996
+!INV_Joyce|other-speaker|speaker|nan
+!INV_Joyce|other-speaker|other-speaker|NA
+!INV_Joyce|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+OTH|speaker|speaker|0.0013438006735508466
+OTH|speaker|other-speaker|nan
+OTH|speaker|no-speaker|0.00022595885955100875
+OTH|other-speaker|speaker|nan
+OTH|other-speaker|other-speaker|NA
+OTH|other-speaker|no-speaker|NA

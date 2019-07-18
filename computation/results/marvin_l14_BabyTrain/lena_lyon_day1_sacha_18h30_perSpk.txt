@@ -1,44 +1,28 @@
-!CHI_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1187    |    nan     | 0.6376     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0553    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_sacha: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.6571    |    nan     | 0.2549     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.2043    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-FEM: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1396    |    nan     | 0.0049     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0256    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MAL: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0324    |    nan     | 0.0000     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0152    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_sacha|speaker|speaker|0.11873997739162417
+!CHI_sacha|speaker|other-speaker|nan
+!CHI_sacha|speaker|no-speaker|0.055298509424538275
+!CHI_sacha|other-speaker|speaker|nan
+!CHI_sacha|other-speaker|other-speaker|NA
+!CHI_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_sacha|speaker|speaker|0.6571282105207815
+!MOT_sacha|speaker|other-speaker|nan
+!MOT_sacha|speaker|no-speaker|0.204349483424906
+!MOT_sacha|other-speaker|speaker|nan
+!MOT_sacha|other-speaker|other-speaker|NA
+!MOT_sacha|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+FEM|speaker|speaker|0.13957385840847544
+FEM|speaker|other-speaker|nan
+FEM|speaker|no-speaker|0.025631588632719117
+FEM|other-speaker|speaker|nan
+FEM|other-speaker|other-speaker|NA
+FEM|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MAL|speaker|speaker|0.03240095691264215
+MAL|speaker|other-speaker|nan
+MAL|speaker|no-speaker|0.015247509135361222
+MAL|other-speaker|speaker|nan
+MAL|other-speaker|other-speaker|NA
+MAL|other-speaker|no-speaker|NA

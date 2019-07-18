@@ -1,22 +1,14 @@
-!CHI_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.2887    |    nan     | 0.3055     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.1374    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_nohlan: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.4531    |    nan     | 0.1879     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.3077    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_nohlan|speaker|speaker|0.2887266199804983
+!CHI_nohlan|speaker|other-speaker|nan
+!CHI_nohlan|speaker|no-speaker|0.13738808616257406
+!CHI_nohlan|other-speaker|speaker|nan
+!CHI_nohlan|other-speaker|other-speaker|NA
+!CHI_nohlan|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_nohlan|speaker|speaker|0.45305159117099514
+!MOT_nohlan|speaker|other-speaker|nan
+!MOT_nohlan|speaker|no-speaker|0.30765224714121153
+!MOT_nohlan|other-speaker|speaker|nan
+!MOT_nohlan|other-speaker|other-speaker|NA
+!MOT_nohlan|other-speaker|no-speaker|NA

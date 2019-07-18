@@ -1,11 +1,7 @@
-!CHI_j27f4b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9835    |    nan     | 0.0187     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0319    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j27f4b|speaker|speaker|0.98347561280016
+!CHI_j27f4b|speaker|other-speaker|nan
+!CHI_j27f4b|speaker|no-speaker|0.03193383588770712
+!CHI_j27f4b|other-speaker|speaker|nan
+!CHI_j27f4b|other-speaker|other-speaker|NA
+!CHI_j27f4b|other-speaker|no-speaker|NA

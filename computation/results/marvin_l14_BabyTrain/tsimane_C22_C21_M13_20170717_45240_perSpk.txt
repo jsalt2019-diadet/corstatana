@@ -1,22 +1,14 @@
-!CHI_C22: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1499    |    nan     | 0.0429     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0034    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-C1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.5734    |    nan     | 0.2729     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.3553    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_C22|speaker|speaker|0.14986927039503878
+!CHI_C22|speaker|other-speaker|nan
+!CHI_C22|speaker|no-speaker|0.003417994690882366
+!CHI_C22|other-speaker|speaker|nan
+!CHI_C22|other-speaker|other-speaker|NA
+!CHI_C22|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+C1|speaker|speaker|0.5733740520580555
+C1|speaker|other-speaker|nan
+C1|speaker|no-speaker|0.35531414434373854
+C1|other-speaker|speaker|nan
+C1|other-speaker|other-speaker|NA
+C1|other-speaker|no-speaker|NA

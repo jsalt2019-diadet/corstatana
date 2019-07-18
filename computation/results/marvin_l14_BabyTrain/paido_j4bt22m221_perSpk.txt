@@ -1,11 +1,7 @@
-!CHI_j22m4b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.9889    |    nan     | 0.0274     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0260    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j22m4b|speaker|speaker|0.9888511148885113
+!CHI_j22m4b|speaker|other-speaker|nan
+!CHI_j22m4b|speaker|no-speaker|0.026047395260473876
+!CHI_j22m4b|other-speaker|speaker|nan
+!CHI_j22m4b|other-speaker|other-speaker|NA
+!CHI_j22m4b|other-speaker|no-speaker|NA

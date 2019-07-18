@@ -1,11 +1,7 @@
-!CHI_j24m5b: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 1.0004    |    nan     | 0.0547     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0135    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_j24m5b|speaker|speaker|1.0003904496027174
+!CHI_j24m5b|speaker|other-speaker|nan
+!CHI_j24m5b|speaker|no-speaker|0.013450988813619018
+!CHI_j24m5b|other-speaker|speaker|nan
+!CHI_j24m5b|other-speaker|other-speaker|NA
+!CHI_j24m5b|other-speaker|no-speaker|NA

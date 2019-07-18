@@ -31,6 +31,7 @@ import pyannote.metrics
 
 from collections import defaultdict
 from pyannote.database import get_protocol
+from speaker_info_per_file import vad_no_ovl
 from pyannote.database.util import load_rttm
 from pyannote.core import Segment, Timeline, Annotation
 from pyannote.metrics.detection import DetectionErrorRate
@@ -146,22 +147,17 @@ def write_evaluation(results, vad):
                 if vad:
                     FA_spk[spk] = numpy.nan
                     miss_spk[spk] = numpy.nan
-                fout.write('{}:'
-                          ' ________________________________________________________________ \n' 
-                          '|        |              |               Reference                |\n'
-                          '|________|______________|________________________________________|\n'
-                          '|        |              | Speaker   | other speaker | no speaker |\n'
-                          '|________|______________|___________|_______________|____________|\n'
-                          '|        |   Speaker    | {:.4f}    |    {:.4f}     | {:.4f}     |\n'
-                          '|        |______________|___________|_______________|____________|\n'
-                          '| System | Other Speaker| {:.4f}    |       NA      |      NA    |\n'
-                          '|        |______________|___________|_______________|____________|\n'
-                          '|        |  No Speaker  | {:.4f}    |       NA      |      NA    |\n'
-                          '|________|______________|___________|_______________|____________|\n'.format(spk, correct[spk], FA_spk[spk],
-                              FA_spch[spk], miss_spk[spk], miss_spch[spk]))
-                          
-
- 
+                fout.write('ID|Ref|System|Duration\n'
+                           '{ID}|speaker|speaker|{sp_sp}\n'
+                           '{ID}|speaker|other-speaker|{sp_osp}\n'
+                           '{ID}|speaker|no-speaker|{sp_nosp}\n'
+                           '{ID}|other-speaker|speaker|{osp_sp}\n'
+                           '{ID}|other-speaker|other-speaker|{osp_osp}\n'
+                           '{ID}|other-speaker|no-speaker|{osp_nosp}\n'.format(
+                           ID=spk, sp_sp=correct[spk], sp_osp=miss_spk[spk],
+                           sp_nosp=miss_spch[spk], osp_sp=FA_spk[spk],
+                           osp_osp='NA', osp_nosp='NA'))
+                            
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('system', type=str,
@@ -191,7 +187,7 @@ def main():
 
     items = list(getattr(protocol, args.subset)())
     reference = {item['uri']: item['annotation'] for item in items}
-
+    
     results = dict()
     for uri in reference: 
         # preffix r: reference

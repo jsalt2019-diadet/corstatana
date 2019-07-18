@@ -1,33 +1,21 @@
-!CHI_9733: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.1666    |    nan     | 1.3169     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0973    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-!MOT_9733: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.0781    |    nan     | 1.2186     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0578    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
-MA1: ________________________________________________________________ 
-|        |              |               Reference                |
-|________|______________|________________________________________|
-|        |              | Speaker   | other speaker | no speaker |
-|________|______________|___________|_______________|____________|
-|        |   Speaker    | 0.5934    |    nan     | 0.9424     |
-|        |______________|___________|_______________|____________|
-| System | Other Speaker| nan    |       NA      |      NA    |
-|        |______________|___________|_______________|____________|
-|        |  No Speaker  | 0.0456    |       NA      |      NA    |
-|________|______________|___________|_______________|____________|
+ID|Ref|System|Duration
+!CHI_9733|speaker|speaker|0.1665735047512571
+!CHI_9733|speaker|other-speaker|nan
+!CHI_9733|speaker|no-speaker|0.0972610396869756
+!CHI_9733|other-speaker|speaker|nan
+!CHI_9733|other-speaker|other-speaker|NA
+!CHI_9733|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+!MOT_9733|speaker|speaker|0.07806968511272609
+!MOT_9733|speaker|other-speaker|nan
+!MOT_9733|speaker|no-speaker|0.05776038755356819
+!MOT_9733|other-speaker|speaker|nan
+!MOT_9733|other-speaker|other-speaker|NA
+!MOT_9733|other-speaker|no-speaker|NA
+ID|Ref|System|Duration
+MA1|speaker|speaker|0.5934414011552082
+MA1|speaker|other-speaker|nan
+MA1|speaker|no-speaker|0.04564933855039977
+MA1|other-speaker|speaker|nan
+MA1|other-speaker|other-speaker|NA
+MA1|other-speaker|no-speaker|NA
