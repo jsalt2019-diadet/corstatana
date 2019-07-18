@@ -243,16 +243,15 @@ def main():
 
 
     chunk_rates = miss_FA_per_chunk(ref_rttm, sys_rttm, ref_sils, sys_sils, args.chunk_dur, uem_dict)
-    ipdb.set_trace()
 
-    #corpus_snr = chunk_SNR(intervals, args.corpus, subset, args.chunk_dur)
+    corpus_snr = chunk_SNR(intervals, args.corpus, subset, args.chunk_dur)
 
-    #with open('{}_{}_{}.csv'.format(corpus_name, subset, args.chunk_dur), 'w') as fout:
-    #    for wav in corpus_snr:
-    #        for onset, offset, chunk_labels, chunk_snr in corpus_snr[wav]:
-    #            fout.write(u'{},{},{},{},{}\n'.format(wav, onset, offset,
-    #                                                  '/'.join(list(set(chunk_labels))),
-    #                                                  chunk_snr))
+    with open('{}_{}_{}.csv'.format(corpus_name, subset, args.chunk_dur), 'w') as fout:
+        for wav in corpus_snr:
+            for onset, offset, chunk_labels, chunk_snr in corpus_snr[wav]:
+                fout.write(u'{},{},{},{},{}\n'.format(wav, onset, offset,
+                                                      '/'.join(list(set(chunk_labels))),
+                                                      chunk_snr))
 
 if __name__ == '__main__': 
     main()
