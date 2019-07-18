@@ -216,15 +216,18 @@ def write_info_per_file(corpus_name, subset, info):
     with open(os.path.join('..','results',"{}_{}.csv".format(corpus_name, subset)), "w") as fout: 
         fout.write(u'file,key_child_age,clip_length,nb_diff_speakers,nb_children,nb_fem_ad,nb_mal_ad,nb_uncertain,prop_ovl_speech,prop_nonovl_speech,avg_voc_dur,snr\n')
         for wav in info:
-            (dur, n_spk, n_chi,
-             n_fa, n_ma, n_unk, ovl,
-             non_ovl, mean_voc, snr) = info[wav]
-            fout.write(u'{wav},,{dur:.2f},{n_spk},{chi}'
-                    ',{f},{m},{u},{ovl:.2f},{novl:.2f},'
-                    '{voc:.2f},{snr}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
-                                             chi=n_chi, f=n_fa, m=n_ma, u=n_unk,
-                                             ovl=ovl, novl=non_ovl, voc=mean_voc,
-                                             snr=snr))
+            try:
+                (dur, n_spk, n_chi,
+                 n_fa, n_ma, n_unk, ovl,
+                 non_ovl, mean_voc, snr) = info[wav]
+                fout.write(u'{wav},,{dur:.2f},{n_spk},{chi}'
+                        ',{f},{m},{u},{ovl:.2f},{novl:.2f},'
+                        '{voc:.2f},{snr}\n'.format(wav=wav, dur=dur, n_spk=n_spk,
+                                                 chi=n_chi, f=n_fa, m=n_ma, u=n_unk,
+                                                 ovl=ovl, novl=non_ovl, voc=mean_voc,
+                                                 snr=snr))
+            except:
+                print(wav)
 
 def write_info_per_speaker(corpus_name, subset, info_perSpk):
     """ write information per speaker """
@@ -239,7 +242,6 @@ def write_info_per_speaker(corpus_name, subset, info_perSpk):
                 fout.write(u'{w},{s},{r},{o},{no},{snr}\n'.format(w=wav, s=spk, r=spk_map[spk],
                                                                 o=dur_ovl[spk],no= dur_nonovl[spk],
                                                                 snr=snr[spk]))
-
 
 def get_silence_times(annot, info):
     """ Extract silences timestamps from annotations.
@@ -314,7 +316,12 @@ def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
         speech_sig = extract_wav_from_label(wav, corpus, subset, annot[wav], "ALL")
       
         # global SNR
-        sil_rms = rms(sil_sig)
+        try:
+            sil_rms = rms(sil_sig)
+        except:
+            print(wav)
+            sil_rms = None
+             
         if (speech_sig is not None) and (sil_sig is not None):
             info[wav].append(rms(speech_sig) / sil_rms)
         else:
