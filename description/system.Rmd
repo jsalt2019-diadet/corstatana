@@ -1,5 +1,5 @@
 ---
-title: "Description of system performance"
+title: "Description of system performance: using the pipeline v1 as example"
 author: "AC"
 output: 
   pdf_document:
@@ -22,7 +22,7 @@ The goal here is to link system performance to characteristics of files and/or s
 
 We read in background data (only exists for babytrain), data describing files and speakers. Typically, this does not depend on your system results, so you do not need to change it.
 
-```{r readin-descriptors}
+```{r readin-descriptors,echo=F, warning=FALSE, comment=FALSE}
 # options(warn=2) for debugging, then options(warn=1)
 
 #background information (only available for babytrain)
@@ -31,7 +31,7 @@ ages[ages$corpus!="corpus",]->ages
 ages$age=as.numeric(as.character(ages$age))
 
 allres=dir("../computation/results/",pattern=".csv")
-
+allres=allres[grep("aver",allres,invert=T)]
 #descriptors per speaker
 datsp=NULL
 for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(paste0("../computation/results/",j))))
@@ -42,18 +42,28 @@ datf=NULL
 for(j in allres[grep("perSpeaker",allres,invert=T)])  datf=rbind(datf,cbind(j,read.csv(paste0("../computation/results/",j))))
 datf$cor=gsub("_.*","",datf$j)
 
+datsp=merge(datsp,datf[,c("file","cor")])
+
 #descriptors per speaker
 merge(datsp,ages,by.x="file",by.y="basename",all.x=T)->datsp
 
-aggregate(datsp[,c("tot_ovl_speech" ,   "tot_nonovl_speech" ,"snr")],by=list())
+write.table(aggregate(datf[,4:13],by=list(datf$cor),mean),"../computation/results/_averages.csv",row.names = F)
+
+write.table(aggregate(datsp[,5:7],by=list(datsp$cor),mean),"../computation/results/_averagesPerSpeaker.csv",row.names = F)
 
 merge(datf,ages,by.x="file",by.y="basename",all.x=T)->datf
 
 #show dimensions and summary of the 2 datasets
-dim(datsp)
-summary(datsp)
-dim(datf)
-summary(datf)
+# dim(datsp)
+# summary(datsp)
+# table(datsp$cor)
+# dim(datf)
+# summary(datf)
+# table(datf$cor)
+
+write.table(datsp,"temp/datsp.txt",row.names = F)
+write.table(datf,"temp/datf.txt",row.names = F)
+
 ```
 
 ### Read in system evaluation data 
@@ -63,40 +73,61 @@ Typically you WILL need to change line 50 below, so that you read in your own sy
 
 IMPORTANT!!! THERE SHOULD BE NO WARNINGS IN IT. IF THERE ARE WARNINGS, DEAL WITH THEM AND REGENERATE A RESULTS FILE WITHOUT THEM
 
+For this example, I manually removed the warnings in these 4 files...
 
-**HUMAN LOOK HERE**
-```{r readin-eval}
-myeval="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdiar_babytrain_eval/plda_scores_tbest/result.pyannote-der"
-file_eval <- read_table(myeval, comment = "--")
-dim(file_eval)
-summary(file_eval)
+```{r readin-eval,echo=F, warning=FALSE, comment=FALSE}
+myevals=c("/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdiar_babytrain_eval/plda_scores_tbest/result.pyannote-der",
+          "/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_ami/jsalt19_spkdiar_ami_eval_Mix-Headset/plda_scores_tbest/result.pyannote-der",
+          "/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_chime5/jsalt19_spkdiar_chime5_eval_U01/plda_scores_tbest/result.pyannote-der",          "/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdiar_sri_eval/plda_scores_tbest/result.pyannote-der")
+file_eval=NULL
+for(thisf in myevals) {
+  suppressMessages(suppressWarnings(file_eval <- rbind(file_eval,read_table(thisf, comment = "--"))))
+  #print(dim(file_eval))
+  }
+
+
+#summary(file_eval)
 
 #the first col must be renamed so that it has the same name as the description files read above
 colnames(file_eval)[1]<-"file"
 
+file_eval=subset(file_eval,file!="TOTAL")
 
 #you may also want to rename the % variables into something that is more readable
 colnames(file_eval)[colnames(file_eval)=="%"]<-"cor.pc"
 colnames(file_eval)[colnames(file_eval)=="%_1"]<-"fa.pc"
 colnames(file_eval)[colnames(file_eval)=="%_2"]<-"miss.pc"
 colnames(file_eval)[colnames(file_eval)=="%_3"]<-"conf.pc"
-
+write.table(file_eval,"temp/eval.txt",row.names = F)
 ```
 
 To make full use of this description suite, you also need to generate a set of descriptors that cross the gold and the system output. To do so, navigate to computation/scripts/ and open the README. Follow the instructions there to set up the analysis environment. Next, assume you have a rttm file with all of the output from a single system for all the wav files. 
 
-```{bash gendesc, eval=F}
+```{bash gendesc, eval=F,echo=F}
 
 #
 source activate corstatana
 
 # declare which rttm you want to analyze, and where you want to store the results
+outfolder="../../system_eval/lda120_plda_voxceleb_samecor_eval_plda_scores_tbest"
 myrttm="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdiar_babytrain_eval/plda_scores_tbest/rttm"
-outfolder="../../system_eval/lda120_plda_voxceleb_babytrain_eval_plda_scores_tbest"
 
 #run the ana
 python metrics_by_speaker.py $myrttm BabyTrain.SpeakerDiarization.All test
 
+#REPEAT FOR AMI
+myrttm="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_ami/jsalt19_spkdiar_ami_eval_Mix-Headset/plda_scores_tbest/rttm"
+python metrics_by_speaker.py $myrttm AMI.SpeakerDiarization.Mix-Headset test
+
+#CHIME5
+ myrttm="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_chime5/jsalt19_spkdiar_chime5_eval_U01/plda_scores_tbest/rttm"
+ python metrics_by_speaker.py $myrttm CHiME5.SpeakerDiarization.U01 test
+
+ #AND SRI
+  myrttm="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb/jsalt19_spkdet_sri_eval_test/plda_scores_tbest/rttm"
+ python metrics_by_speaker.py $myrttm SRI.SpeakerDiarization.dc test
+
+ 
 #clean up
 mkdir $outfolder
 
@@ -111,11 +142,12 @@ grep -v "Duration" $outfolder/*perSpk.txt | sed "s~$outfolder~~" | tr ":" "\t" |
 
 This next chunk takes the output of the previous one and combines them into a table that can be used in further analyses
 
-```{r combinesp}
-outfolder="../system_eval/lda120_plda_voxceleb_babytrain_eval_plda_scores_tbest/"
+```{r combinesp,echo=F, warning=FALSE, comment=FALSE}
+outfolder="../system_eval/lda120_plda_voxceleb_samecor_eval_plda_scores_tbest/"
 
 read.table(paste0(outfolder,"perSpkall.txt"),header=T)->spout
-summary(spout)
+#summary(spout)
+#dim(spout)
 spout$file=gsub("_perSpk.txt","",gsub("/","",spout$file,fixed=T))
 spout$uniq=paste(spout$file,spout$ID)
 
@@ -149,72 +181,79 @@ for(u in levels(factor(spout$uniq))){
 
 spr=rbind(spr,cbind(u,fd,md,ms,c,ts,to))
 }
-summary(spr)
+#summary(spr)
 
 spr=merge(spr,datsp,by.x="u",by.y="uniq")
 write.table(spr,paste0(outfolder,"speaker_ana.txt"),row.names=F)
-
+write.table(spr,"temp/speaker_ana.txt",row.names = F)
 
 ```
 
-
+**HUMAN END OF LOOK HERE**
 
 ### Combine descriptor and system data 
 
+If all goes well, you won't need to change any of the following sections. After this code, the table file_eval has a combination of results and descriptors at the level of files.
 
-If all goes well, you won't need to change this section. After this code, the table file_eval has a combination of results and descriptors at the level of files.
-
-```{r mrg}
+```{r mrg,echo=F, warning=FALSE, comment=FALSE}
 
 merge(file_eval,datf,all.x=T)->file_eval
 
-dim(file_eval) #**human** check that the number of rows (first number) outputted here is the same as that in line 61.
-summary(file_eval)
+#dim(file_eval) #**human** check that the number of rows (first number) outputted here is the same as that in line 61.
+#summary(file_eval)
+write.table(file_eval,"temp/evalwdesc.txt",row.names = F)
+
 ```
 
 Now you are ready to do some inspection. You can turn chunks off by adding ", eval=F" (e.g. {r spl,fig.height=10} below, it would become {r spl,fig.height=10, eval=F}) 
 
-### Example of analysis: Explaining misses and false alarms across files based on file characteristics (Marvin VAD on BabyTrain - 5 class, old architecture)
+### Example of analysis: Focusing on our pipeline V1
 
-A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file and only for BabyTrain because that's what I drew results for. We only have false alarms and misses because we are looking at a VAD system. (In particular, this is Marvin's system for week 1.)
+A scatter plot matrix shows many bivariate plots. In the one below, we focus exclusively on descriptors at the level of the file.
 
-```{r spl,fig.height=10,eval=F}
-
+```{r spl,fig.height=10,echo=F}
+file_eval$total.capped=file_eval$total
+file_eval$total.capped[file_eval$total.capped>2000]=2000
+file_eval$fa.pc.capped=file_eval$fa.pc
+file_eval$fa.pc.capped[file_eval$fa.pc.capped>200]=200
+#pdf("pipelineres.pdf",height=10,width=10)
 library(lattice)
-selected=c("fa.pc","miss.pc","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
+selected=c("fa.pc.capped","miss.pc","conf.pc","total.capped","prop_ovl_speech","nb_diff_speakers")
 selnames=gsub(".","\n",gsub("_","\n",selected),fixed=T)
-splom(file_eval[c(selected)],pch=".",groups=file_eval$corpus,varnames=selnames,auto.key = list(columns = 3),axis.line.tck = -.5, axis.text.lineheight=0,
+splom(file_eval[c(selected)],groups=file_eval$cor,varnames=selnames,auto.key = list(columns = 3),axis.line.tck = -.5, axis.text.lineheight=0,
 panel = function(x, y, ...) {
            panel.xyplot(x, y, ...)
           fm <- lm(y ~ x)
           panel.abline(fm,col.line = "gray")
 }
 )
+#dev.off()
 ```
 
-Focus on the last two rows, which show the correlations between percent misses (penultimate row) or percent false alarms (last row) and the following selected characteristics (from left to right):
+Focus on the last three rows, which show the correlations between percent false alarms (last row -- capped at 200, meaning that any file that had more than 200 gets 200), percent misses (penultimate row), and percent confusion (antepen row),  and the following selected characteristics (from left to right):
 
-- proportion of speech that is overlapping
-- average vocalization/utterance/sentence duration
-- key child age
-- SNR calculated as RMS(x_speech)/RMS(x_sil) where x_speech is an array with all the areas of speech in the gold annotation, and  x_sil is un array with all the areas of silence
+- proportion of speech that is overlapping (out of all speech in the file, which part was overlapping between two talkers)
 - number of different speakers
 
-So focusing on the last row, false alarms look unrelated to all of these predictors, although this may be because the scale is too large.
+For example, focusing on the last row, there is a lower percent of false alarms for corpora with more overlap (although this is mainly driven by corpus differences).
 
-One row up, misses does not relate to proportion overlap or number of different speakers, but is anticorrelated with the duration of speech, child age, and SNR.
+One row up, percent misses goes up with proportion of overlap (same caveat).
 
-### Example of analysis 2: ConvRNN version 
+One row up, percent confusion goes down slightly with proportion overlap (but same caveat); and it goes up with number of talkers.
+
+<!-- Now we do the same to see which speakers are picked up correctly or not. NOTE -- THERE IS A BUG UPSTREAM SO THIS IS SOLVED ONLY AT THE VAD LEVEL, NOT AT THE TD LEVEL... (all cases of error due to confusion are na, which is false, obviously) - also why is there only babytrain? -->
+
+### Example of analysis 2: Still using the pipeline v1
 
 You can also focus on specific outcome and predictor variables and trim their distribution to see them more clearly.
 
-```{r indiv-plots}
+```{r indiv-plots,echo=F}
 
-cor_color=rainbow(length(levels(factor(file_eval$corpus)))) #get different colors for diff datasets
-names(cor_color)<-levels(factor(file_eval$corpus))
+cor_color=rainbow(length(levels(factor(file_eval$cor)))) #get different colors for diff datasets
+names(cor_color)<-levels(factor(file_eval$cor))
 
-file_eval_metrics=c("fa.pc","miss.pc")
-predictors=c("total","clip_length","prop_ovl_speech","avg_voc_dur","age","snr","nb_diff_speakers")
+file_eval_metrics=c("fa.pc.capped","miss.pc","conf.pc")
+predictors=c("prop_ovl_speech","nb_diff_speakers")
 
 for(thismet in file_eval_metrics){ 
   iqr=IQR(file_eval[,thismet])
@@ -238,167 +277,23 @@ for(thismet in file_eval_metrics){
 
 Messages I take away from this:
 
-*For FA rate*
+*For FA rate capped*
 
-- no sig rel with total speech duration
-- sig lower FA for longer files
-- no sig rel with proportion of overlapping speech
-- sig higher FA for files with shorter voc duration
-- sig lower FA for files from older children
-- sig lower FA for files with higher SNR
-- sig higher FA when higher number of different speakers
+(conclusions to be taken with a grain of salt, given that capping shifts the distribution)
+
+-  significantly lower FA  with higher proportion of overlapping speech
+- no sig different FA as a function of number of different speakers
 
 
 *For miss rate*
 
-- no sig rel with total speech duration
-- sig lower FA for longer files
-- trend for higher miss for files with higher prop overlapping speech
-- sig lower miss for files with longer voc dur
-- sig fewer misses for files from older children
-- sig fewer misses for files with higher SNR
+Attention that most SRI files get excluded as outliers for miss rate...
+
+- sig higher miss for files with higher prop overlapping speech
 - sig higher miss when more speakers
 
-#### ConvRNN version continued, now excluding Tsay and Paido
-
-```{r npnt}
-
-# subanalyses without paido and tsay
-
-print("**removing paido and tsay**")
-
-npnt=file_eval[!(file_eval$corpus %in% c("tsay","paido")),]
-
-for(thismet in file_eval_metrics){ 
-  iqr=IQR(npnt[,thismet])
-  med=median(npnt[,thismet])
-  no_outliers=npnt[npnt[,thismet]<med+1.5*iqr,]
-  print(paste("removing",dim(npnt)[1]-dim(no_outliers)[1], "outliers in",thismet))
-  for(thispred in predictors){
-    plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=thismet)
-    abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))
-     print(summary(lm(no_outliers[,thismet]~no_outliers[,thispred])))
-   if(max(no_outliers[,thismet])>300){
-        plot(no_outliers[,thismet]~no_outliers[,thispred], pch=20,col=alpha(cor_color[no_outliers$corpus],.2),xlab=thispred,ylab=paste(thismet,"(restricted range)"),ylim=c(0,300))
-    abline(lm(no_outliers[,thismet]~no_outliers[,thispred]))      
-    }
-  }
-}
-```
-
-Messages that go away or remain when we excluded paido and tsay:
-
-*For FA rate*
-
-- no sig rel with total speech duration --> the same
-- sig lower FA for longer files --> the same
-- no sig rel with proportion of overlapping speech  --> NO, lower FA for studies with a higher proportion of overlapping speech
-- sig higher FA for files with shorter voc duration -->  --> NO, the opposite
-- sig lower FA for files from older children --> NO, stable
-- sig lower FA for files with higher SNR --> NO, stable
-- sig higher FA when higher number of different speakers --> NO, stable
+*For confusion*
 
 
-*For miss rate*
-
-- no sig rel with total speech duration --> the same
-- sig lower FA for longer files --> the same
-- slight higher miss for files with higher prop overlapping speech --> NO, stable
-- sig lower miss for files with longer voc dur  --> NO, opposite: higher miss for files with longer voc dur
-- sig fewer misses for files from older children --> the same
-- sig fewer misses for files with higher SNR --> NO, opposite: higher miss for files with higher SNR
-- sig higher miss when more speakers --> NO, opposite: lower miss for files with more speakers
-
-#### ConvRNN version continued, checking whether subcorpora differences can be explained away via these other variables
-
-We see that many effects are different when paido and tsay are removed. This suggest that some of the apparent correlations are driven by subcorpus differences. So in this section we check whether subcorpus adds any explanatory power once clip diffs are already captured by the other methods
-
-```{r lmcomp, eval=F}
-
-for(thismet in file_eval_metrics){ 
-  iqr=IQR(file_eval[,thismet])
-  med=median(file_eval[,thismet])
-  no_outliers=file_eval[file_eval[,thismet]<med+1.5*iqr,]
-  #print(paste("removing",dim(file_eval)[1]-dim(no_outliers)[1], "outliers in",thismet))
-  for(thispred in predictors){
-     print(paste("Regressions with and without corpus for",thismet,"and",thispred))
-   basemodel=lm(file_eval[,thismet]~file_eval[,thispred],subset=c(!is.na(file_eval[,"corpus"])))
-    withcor=lm(file_eval[,thismet]~file_eval[,thispred]+file_eval[,"corpus"])
-    print(summary(basemodel))
-    print(summary(withcor))
-    print(anova(basemodel,withcor))
-  }
-}
-```
-
-
-### Example of analysis 3: ConvRNN version & talker-based analyses
-
-You can also focus on specific outcome and predictor variables and trim their distribution to see them more clearly.
-
-```{bash clean, eval=F}
-mydir="../computation/results/marvin_l14_BabyTrain/"
-header="file  ID Ref System  Duration"
-echo $header > $mydir/perSpkall.txt
-grep -v "Duration" $mydir/*perSpk.txt | sed "s~$mydir~~" | tr ":" "\t" | tr "|" "\t" >> $mydir/perSpkall.txt
-
-
-```
-
-```{r marvinpersp,eval=F}
-mydir="../computation/results/marvin_l14_BabyTrain/"
-read.table(paste0(mydir,"perSpkall.txt"),header=T)->spout
-summary(spout)
-spout$file=gsub("_perSpk.txt","",gsub("/","",spout$file,fixed=T))
-spout$uniq=paste(spout$file,spout$ID)
-
-# convert to rates
-# false_disc = ref other, system speak
-# missed_disc = ref speak, system other speak
-# missed_speech = ref speak, system no_speaker
-# correct = ref speak, system speak
-# total speaker = ref speak tot
-# total others= ref other
-
-spr=NULL
-for(u in levels(factor(spout$uniq))){
-  # false_disc = ref other, system speak
-  fd=spout[spout$uniq==u & spout$Ref=="other-speaker" & spout$System=="speaker","Duration"]
-  
-# missed_disc = ref speak, system other speak
-  md=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="other-speaker","Duration"]
-
-  # missed_speech = ref speak, system no_speaker
-  ms=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="no-speaker","Duration"]
-
-# correct = ref speak, system speak
-  c=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="speaker","Duration"]
-
-# total speaker = ref speak tot
-  ts=sum(spout[spout$uniq==u & spout$Ref=="speaker" ,"Duration"],na.rm=T)
-
-# total others= ref other
-   to=sum(spout[spout$uniq==u & spout$Ref=="other-speaker" ,"Duration"],na.rm=T)
-
-spr=rbind(spr,cbind(u,fd,md,ms,c,ts,to))
-}
-summary(spr)
-
-spr=merge(spr,datsp,by.x="u",by.y="uniq")
-write.table(spr,"speaker_ana.txt",row.names=F)
-read.table("speaker_ana.txt",header=T)->spr
-summary(spr)
-
-#rates
-spr$cr=round(spr$c,3)/round(spr$ts,3)
-
-cor_color=rainbow(length(levels(factor(spr$corpus)))) #get different colors for diff datasets
-names(cor_color)<-levels(factor(spr$corpus))
-
-plot(cr~age,data=spr,subset=c(grep("CHI",spr$u)),col=alpha(cor_color[spr$corpus],.2),pch=20)
-
-plot(cr*100 ~ jitter(as.numeric(role),factor=2),data=spr,col=alpha(cor_color[spr$corpus],.2),pch=20,xaxt="n",xlab="",ylab="% detected in VAD")
-axis(1,at=1:5,labels=levels(spr$role))
-```
-
-
+- sig lower confusion for files with higher prop overlapping speech
+- sig higher confusion when more speakers
