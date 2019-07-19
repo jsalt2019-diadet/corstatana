@@ -16,7 +16,7 @@ Requirements
 you can install those using the environment.yml file:
 
 ```
-$ conda create env -f environment.yml
+$ conda env create -f environment.yml
 $ source activate corstatana
 ```
 
