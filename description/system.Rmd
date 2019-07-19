@@ -44,6 +44,9 @@ datf$cor=gsub("_.*","",datf$j)
 
 #descriptors per speaker
 merge(datsp,ages,by.x="file",by.y="basename",all.x=T)->datsp
+
+aggregate(datsp[,c("tot_ovl_speech" ,   "tot_nonovl_speech" ,"snr")],by=list())
+
 merge(datf,ages,by.x="file",by.y="basename",all.x=T)->datf
 
 #show dimensions and summary of the 2 datasets
@@ -53,25 +56,107 @@ dim(datf)
 summary(datf)
 ```
 
-### Read in system data 
+### Read in system evaluation data 
 
 **HUMAN LOOK HERE**
-Typically you WILL need to change line 50 below, so that you read in your own system results. Please use pyannote.metrics to generate your results. They should be space separated 
+Typically you WILL need to change line 50 below, so that you read in your own system results. Please use pyannote.metrics to generate your results. They should be space separated.
+
+IMPORTANT!!! THERE SHOULD BE NO WARNINGS IN IT. IF THERE ARE WARNINGS, DEAL WITH THEM AND REGENERATE A RESULTS FILE WITHOUT THEM
+
+
 **HUMAN LOOK HERE**
 ```{r readin-eval}
-file_eval <- read_table("../system_eval/BabyTrain_ConvRNN.txt", comment = "--")
+myeval="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdiar_babytrain_eval/plda_scores_tbest/result.pyannote-der"
+file_eval <- read_table(myeval, comment = "--")
 dim(file_eval)
 summary(file_eval)
 
-#the first col must be renamed
+#the first col must be renamed so that it has the same name as the description files read above
 colnames(file_eval)[1]<-"file"
 
 
-#you may also want to rename some variables into something that is more readable
-colnames(file_eval)[colnames(file_eval)=="%"]<-"fa.pc"
-colnames(file_eval)[colnames(file_eval)=="%_1"]<-"miss.pc"
+#you may also want to rename the % variables into something that is more readable
+colnames(file_eval)[colnames(file_eval)=="%"]<-"cor.pc"
+colnames(file_eval)[colnames(file_eval)=="%_1"]<-"fa.pc"
+colnames(file_eval)[colnames(file_eval)=="%_2"]<-"miss.pc"
+colnames(file_eval)[colnames(file_eval)=="%_3"]<-"conf.pc"
 
 ```
+
+To make full use of this description suite, you also need to generate a set of descriptors that cross the gold and the system output. To do so, navigate to computation/scripts/ and open the README. Follow the instructions there to set up the analysis environment. Next, assume you have a rttm file with all of the output from a single system for all the wav files. 
+
+```{bash gendesc, eval=F}
+
+#
+source activate corstatana
+
+# declare which rttm you want to analyze, and where you want to store the results
+myrttm="/Users/acristia/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdiar_babytrain_eval/plda_scores_tbest/rttm"
+outfolder="../../system_eval/lda120_plda_voxceleb_babytrain_eval_plda_scores_tbest"
+
+#run the ana
+python metrics_by_speaker.py $myrttm BabyTrain.SpeakerDiarization.All test
+
+#clean up
+mkdir $outfolder
+
+mv *.txt $outfolder/.
+
+#create a single clean file
+header="file  ID Ref System  Duration"
+echo $header > $outfolder/perSpkall.txt
+grep -v "Duration" $outfolder/*perSpk.txt | sed "s~$outfolder~~" | tr ":" "\t" | tr "|" "\t" >> $outfolder/perSpkall.txt
+
+```
+
+This next chunk takes the output of the previous one and combines them into a table that can be used in further analyses
+
+```{r combinesp}
+outfolder="../system_eval/lda120_plda_voxceleb_babytrain_eval_plda_scores_tbest/"
+
+read.table(paste0(outfolder,"perSpkall.txt"),header=T)->spout
+summary(spout)
+spout$file=gsub("_perSpk.txt","",gsub("/","",spout$file,fixed=T))
+spout$uniq=paste(spout$file,spout$ID)
+
+# convert to rates
+# false_disc = ref other, system speak
+# missed_disc = ref speak, system other speak
+# missed_speech = ref speak, system no_speaker
+# correct = ref speak, system speak
+# total speaker = ref speak tot
+# total others= ref other
+
+spr=NULL
+for(u in levels(factor(spout$uniq))){
+  # false_disc = ref other, system speak
+  fd=spout[spout$uniq==u & spout$Ref=="other-speaker" & spout$System=="speaker","Duration"]
+  
+# missed_disc = ref speak, system other speak
+  md=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="other-speaker","Duration"]
+
+  # missed_speech = ref speak, system no_speaker
+  ms=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="no-speaker","Duration"]
+
+# correct = ref speak, system speak
+  c=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="speaker","Duration"]
+
+# total speaker = ref speak tot
+  ts=sum(spout[spout$uniq==u & spout$Ref=="speaker" ,"Duration"],na.rm=T)
+
+# total others= ref other
+   to=sum(spout[spout$uniq==u & spout$Ref=="other-speaker" ,"Duration"],na.rm=T)
+
+spr=rbind(spr,cbind(u,fd,md,ms,c,ts,to))
+}
+summary(spr)
+
+spr=merge(spr,datsp,by.x="u",by.y="uniq")
+write.table(spr,paste0(outfolder,"speaker_ana.txt"),row.names=F)
+
+
+```
+
 
 
 ### Combine descriptor and system data 
@@ -260,7 +345,7 @@ grep -v "Duration" $mydir/*perSpk.txt | sed "s~$mydir~~" | tr ":" "\t" | tr "|" 
 
 ```
 
-```{r}
+```{r marvinpersp,eval=F}
 mydir="../computation/results/marvin_l14_BabyTrain/"
 read.table(paste0(mydir,"perSpkall.txt"),header=T)->spout
 summary(spout)
@@ -316,12 +401,4 @@ plot(cr*100 ~ jitter(as.numeric(role),factor=2),data=spr,col=alpha(cor_color[spr
 axis(1,at=1:5,labels=levels(spr$role))
 ```
 
-## Analysis from scratch
-
-Assume you have a folder with rttms from a single system
-
-```{r}
-myfolder="~/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdet_babytrain_eval_test/"
-
-```
 
