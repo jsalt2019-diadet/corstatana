@@ -293,7 +293,8 @@ def extract_wav_from_label(wav, corpus_path, subset, annot, label):
     else:
         labs = [np.arange(int(frate*on), int(frate*off))
                 for on, off, lab in annot 
-                if spk_map[lab] == label]
+                if (spk_map[lab] == label or 
+                    lab == label)]
     try:
         lab_idx = np.concatenate(labs)
     except:
@@ -328,8 +329,9 @@ def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
             info[wav].append("NA")
 
         print('Global snr is {}'.format(info[wav][-1]))
-        
-        for label in ['KCHI', 'CHI', 'FEM', 'MAL', 'SPEECH']:
+        dur_ovl, dur_nonovl, dur_speech= info_perSpk[wav]
+        #for label in ['KCHI', 'CHI', 'FEM', 'MAL', 'SPEECH']:
+        for label in dur_speech:
             lab_sig = extract_wav_from_label(wav, corpus, subset, annot[wav], label)
              
             # per label SNR
