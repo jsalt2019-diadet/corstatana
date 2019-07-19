@@ -1,0 +1,25 @@
+name: corstatana
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.6
+  - ipython
+  - numpy
+  - pip
+  - pytest
+  - pytest-cov
+  - pytest-runner
+  - pyyaml
+  - scipy
+  - sox  # sox binary
+  - sphinx
+  - sphinx_rtd_theme
+  - tabulate
+  - pip:
+      - ipdb
+      - sox  # sox python wrapper
+      - pyannote.core >= 3.0
+      - pyannote.database >= 2.2
+      - pyannote.generators >= 2.0
+      - pyannote.metrics >= 1.8.1
+      - pyannote.pipeline >= 1.2

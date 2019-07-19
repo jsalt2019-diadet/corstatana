@@ -208,8 +208,8 @@ def main():
 
     parser.add_argument('corpus', type=str,
                         help='path to the corpus')
-    parser.add_argument('--rttm', type=str, default=None,
-                        help='(Optional) enable to link only test rttm, and not whole corpus.')
+    parser.add_argument('rttm', type=str, default=None,
+                        help='path to the system RTTM')
     parser.add_argument('--chunk_dur', type=int, default=10,
                         help='(Optional) duration in seconds of the chunks to be analysed')
     args = parser.parse_args()
@@ -225,33 +225,33 @@ def main():
                    'AMI': 'allMix-Headset_{}.rttm',
                    'BabyTrain': 'all_{}.rttm'}
     sys_rttm = get_intervals(args.rttm)
-    subset = 'test'
-    #for subset in ['train', 'dev', 'test']:
-    # read annotations
-    rttm = os.path.join(args.corpus, subset,
-                        corpus2rttm[corpus_name].format(subset))
-    
-    uem = os.path.join(args.corpus, subset,
-                        corpus2rttm[corpus_name].format(subset).replace('rttm', 'uem'))
+    #subset = 'test'
+    for subset in ['train', 'dev', 'test']:
+        # read annotations
+        rttm = os.path.join(args.corpus, subset,
+                            corpus2rttm[corpus_name].format(subset))
+        
+        uem = os.path.join(args.corpus, subset,
+                            corpus2rttm[corpus_name].format(subset).replace('rttm', 'uem'))
 
-    ref_rttm = get_intervals(rttm)
-    uem_dict = read_uem(uem)
+        ref_rttm = get_intervals(rttm)
+        uem_dict = read_uem(uem)
 
-    sys_sils = get_silences(sys_rttm, uem_dict)
+        sys_sils = get_silences(sys_rttm, uem_dict)
 
-    ref_sils = get_silences(ref_rttm, uem_dict)
+        ref_sils = get_silences(ref_rttm, uem_dict)
 
 
-    chunk_rates = miss_FA_per_chunk(ref_rttm, sys_rttm, ref_sils, sys_sils, args.chunk_dur, uem_dict)
+        chunk_rates = miss_FA_per_chunk(ref_rttm, sys_rttm, ref_sils, sys_sils, args.chunk_dur, uem_dict)
 
-    corpus_snr = chunk_SNR(intervals, args.corpus, subset, args.chunk_dur)
+        corpus_snr = chunk_SNR(intervals, args.corpus, subset, args.chunk_dur)
 
-    with open('{}_{}_{}.csv'.format(corpus_name, subset, args.chunk_dur), 'w') as fout:
-        for wav in corpus_snr:
-            for onset, offset, chunk_labels, chunk_snr in corpus_snr[wav]:
-                fout.write(u'{},{},{},{},{}\n'.format(wav, onset, offset,
-                                                      '/'.join(list(set(chunk_labels))),
-                                                      chunk_snr))
+        with open('{}_{}_{}.csv'.format(corpus_name, subset, args.chunk_dur), 'w') as fout:
+            for wav in corpus_snr:
+                for onset, offset, chunk_labels, chunk_snr in corpus_snr[wav]:
+                    fout.write(u'{},{},{},{},{}\n'.format(wav, onset, offset,
+                                                          '/'.join(list(set(chunk_labels))),
+                                                          chunk_snr))
 
 if __name__ == '__main__': 
     main()
