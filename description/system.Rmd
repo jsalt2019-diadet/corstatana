@@ -35,6 +35,7 @@ allres=dir("../computation/results/",pattern=".csv")
 #descriptors per speaker
 datsp=NULL
 for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(paste0("../computation/results/",j))))
+datsp$uniq=paste(datsp$file,datsp$speaker)
 
 #descriptors per file
 datf=NULL
@@ -244,3 +245,83 @@ for(thismet in file_eval_metrics){
   }
 }
 ```
+
+
+### Example of analysis 3: ConvRNN version & talker-based analyses
+
+You can also focus on specific outcome and predictor variables and trim their distribution to see them more clearly.
+
+```{bash clean, eval=F}
+mydir="../computation/results/marvin_l14_BabyTrain/"
+header="file  ID Ref System  Duration"
+echo $header > $mydir/perSpkall.txt
+grep -v "Duration" $mydir/*perSpk.txt | sed "s~$mydir~~" | tr ":" "\t" | tr "|" "\t" >> $mydir/perSpkall.txt
+
+
+```
+
+```{r}
+mydir="../computation/results/marvin_l14_BabyTrain/"
+read.table(paste0(mydir,"perSpkall.txt"),header=T)->spout
+summary(spout)
+spout$file=gsub("_perSpk.txt","",gsub("/","",spout$file,fixed=T))
+spout$uniq=paste(spout$file,spout$ID)
+
+# convert to rates
+# false_disc = ref other, system speak
+# missed_disc = ref speak, system other speak
+# missed_speech = ref speak, system no_speaker
+# correct = ref speak, system speak
+# total speaker = ref speak tot
+# total others= ref other
+
+spr=NULL
+for(u in levels(factor(spout$uniq))){
+  # false_disc = ref other, system speak
+  fd=spout[spout$uniq==u & spout$Ref=="other-speaker" & spout$System=="speaker","Duration"]
+  
+# missed_disc = ref speak, system other speak
+  md=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="other-speaker","Duration"]
+
+  # missed_speech = ref speak, system no_speaker
+  ms=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="no-speaker","Duration"]
+
+# correct = ref speak, system speak
+  c=spout[spout$uniq==u & spout$Ref=="speaker" & spout$System=="speaker","Duration"]
+
+# total speaker = ref speak tot
+  ts=sum(spout[spout$uniq==u & spout$Ref=="speaker" ,"Duration"],na.rm=T)
+
+# total others= ref other
+   to=sum(spout[spout$uniq==u & spout$Ref=="other-speaker" ,"Duration"],na.rm=T)
+
+spr=rbind(spr,cbind(u,fd,md,ms,c,ts,to))
+}
+summary(spr)
+
+spr=merge(spr,datsp,by.x="u",by.y="uniq")
+write.table(spr,"speaker_ana.txt",row.names=F)
+read.table("speaker_ana.txt",header=T)->spr
+summary(spr)
+
+#rates
+spr$cr=round(spr$c,3)/round(spr$ts,3)
+
+cor_color=rainbow(length(levels(factor(spr$corpus)))) #get different colors for diff datasets
+names(cor_color)<-levels(factor(spr$corpus))
+
+plot(cr~age,data=spr,subset=c(grep("CHI",spr$u)),col=alpha(cor_color[spr$corpus],.2),pch=20)
+
+plot(cr*100 ~ jitter(as.numeric(role),factor=2),data=spr,col=alpha(cor_color[spr$corpus],.2),pch=20,xaxt="n",xlab="",ylab="% detected in VAD")
+axis(1,at=1:5,labels=levels(spr$role))
+```
+
+## Analysis from scratch
+
+Assume you have a folder with rttms from a single system
+
+```{r}
+myfolder="~/Documents/gitrepos/corstatana/system_eval/output_rttms/pipeline/v1/lda120_plda_voxceleb_babytrain/jsalt19_spkdet_babytrain_eval_test/"
+
+```
+

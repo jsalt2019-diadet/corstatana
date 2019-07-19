@@ -1,0 +1,12 @@
+name: detApp
+title: detApp
+username:
+account: acristia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1037213
+bundleId: 2241218
+url: https://acristia.shinyapps.io/detApp/
+when: 1563379943.1068
+asMultiple: FALSE
+asStatic: FALSE
