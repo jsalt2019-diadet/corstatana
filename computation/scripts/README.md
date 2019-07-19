@@ -16,8 +16,64 @@ Requirements
 you can install those using the environment.yml file:
 
 ```
-$ conda create env -f environment.yml
+$ conda env create -f environment.yml
 $ source activate corstatana
+```
+
+After that, you need to create in your home directory a .pyannote folder, and inside that folder, create a file database.yml with the following content: 
+
+```
+Databases:
+   AMI: /PATH/TO/AMI/*/wav/{uri}.wav
+   BabyTrain: /PATH/TO/BabyTrain/*/wav/{uri}.wav
+   CHiME5: /PATH/TO/CHiME5/*/wav/{uri}.wav
+   MUSAN: /PATH/TO/musan/{uri}.wav
+
+Protocols:
+
+   AMI:
+      SpeakerDiarization:
+         # AMI.SpeakerDiarization.MixHeadset
+         MixHeadset:
+           train:
+              annotation: /PATH/TO/AMI/train/allMix-Headset_train.rttm
+              annotated: /PATH/TO/AMI/train/allMix-Headset_train.uem
+           development:
+              annotation: /PATH/TO/AMI/dev/allMix-Headset_dev.rttm
+              annotated: /PATH/TO/AMI/dev/allMix-Headset_dev.uem
+           test:
+              annotation: /PATH/TO/AMI/test/allMix-Headset_test.rttm
+              annotated: /PATH/TO/AMI/test/allMix-Headset_test.uem
+
+   BabyTrain:
+      SpeakerDiarization:
+         # BabyTrain.SpeakerDiarization.All
+         All:
+            train:
+              annotation: /PATH/TO/BabyTrain/train/all_train.rttm
+              annotated: /PATH/TO/BabyTrain/train/all_train.uem
+            development:
+              annotation: /PATH/TO/BabyTrain/dev/all_dev.rttm
+              annotated: /PATH/TO/BabyTrain/dev/all_dev.uem
+            test:
+              annotation: /PATH/TO/BabyTrain/test/all_test.rttm
+              annotated: /PATH/TO/BabyTrain/test/all_test.uem
+
+   CHiME5:
+      SpeakerDiarization:
+         # CHiME5.SpeakerDiarization.U01
+         U01:
+           train:
+             annotation: /PATH/TO/CHiME5/train/allU01_train.rttm
+             annotated: /PATH/TO/CHiME5/train/allU01_train.uem
+           development:
+             annotation: /PATH/TO/CHiME5/dev/allU01_dev.rttm
+             annotated: /PATH/TO/CHiME5/dev/allU01_dev.uem
+           test:
+             annotation: /PATH/TO/CHiME5/test/allU01_test.rttm
+             annotated: /PATH/TO/CHiME5/test/allU01_test.uem
+
+
 ```
 
 metrics_by_speaker.py

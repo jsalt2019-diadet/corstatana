@@ -193,7 +193,11 @@ def main():
         # preffix r: reference
         # prefix s: system
         r_annot = reference[uri]
-        s_annot = system[uri]
+        # In case the uri was not evaluated, skip this one and go to the next
+        try:
+            s_annot = system[uri]
+        except:
+            continue
 
         r_labels = {lab: r_annot.label_timeline(lab) for lab in r_annot.labels()}
         s_labels = {lab: s_annot.label_timeline(lab) for lab in s_annot.labels()}
