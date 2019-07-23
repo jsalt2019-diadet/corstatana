@@ -90,10 +90,10 @@ def accumulate_reference(r_labels, s_labels, mapping, dur):
             # iterate on segments in common in reference and system_silences
             for r, s_ in r_label.co_iter(s_label.gaps()):
                 miss_speech[r_spk] += (r & s_).duration
-
-            correct[r_spk] = correct[r_spk] / dur
-            miss_spk[r_spk] = miss_spk[r_spk] / dur
-            miss_speech[r_spk] = miss_speech[r_spk] / dur
+            ## EDIT: Changing to total duration and not ratios
+            correct[r_spk] = correct[r_spk] #/ dur
+            miss_spk[r_spk] = miss_spk[r_spk] #/ dur
+            miss_speech[r_spk] = miss_speech[r_spk] #/ dur
     return correct, miss_spk, miss_speech
 
 def  accumulate_system(r_labels, s_labels, mapping, dur):
@@ -118,9 +118,9 @@ def  accumulate_system(r_labels, s_labels, mapping, dur):
             for s, r_ in s_label.co_iter(r_label.gaps()):
                 FA_speech[r_spk] += (s & r_).duration
 
-            correct[r_spk] = correct[r_spk] / dur
-            FA_spk[r_spk] = FA_spk[r_spk] / dur
-            FA_speech[r_spk] = FA_speech[r_spk] / dur
+            correct[r_spk] = correct[r_spk] #/ dur
+            FA_spk[r_spk] = FA_spk[r_spk] #/ dur
+            FA_speech[r_spk] = FA_speech[r_spk] #/ dur
 
 
     return correct, FA_spk, FA_speech

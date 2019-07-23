@@ -1,7 +1,7 @@
 ID|Ref|System|Duration
-!CHI_j25m3b|speaker|speaker|0.9926864307169908
+!CHI_j25m3b|speaker|speaker|53.20699999999995
 !CHI_j25m3b|speaker|other-speaker|nan
-!CHI_j25m3b|speaker|no-speaker|0.022948189331890478
+!CHI_j25m3b|speaker|no-speaker|1.2299999999999969
 !CHI_j25m3b|other-speaker|speaker|nan
 !CHI_j25m3b|other-speaker|other-speaker|NA
 !CHI_j25m3b|other-speaker|no-speaker|NA

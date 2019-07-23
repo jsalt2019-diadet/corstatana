@@ -1,7 +1,7 @@
 ID|Ref|System|Duration
-!CHI_j19m4b|speaker|speaker|0.9696925114020892
+!CHI_j19m4b|speaker|speaker|59.31899999999998
 !CHI_j19m4b|speaker|other-speaker|nan
-!CHI_j19m4b|speaker|no-speaker|0.04228989913850881
+!CHI_j19m4b|speaker|no-speaker|2.586999999999998
 !CHI_j19m4b|other-speaker|speaker|nan
 !CHI_j19m4b|other-speaker|other-speaker|NA
 !CHI_j19m4b|other-speaker|no-speaker|NA

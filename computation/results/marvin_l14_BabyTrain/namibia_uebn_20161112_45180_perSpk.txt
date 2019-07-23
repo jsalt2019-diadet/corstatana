@@ -1,7 +1,7 @@
 ID|Ref|System|Duration
-FA1|speaker|speaker|0.7116338425914961
+FA1|speaker|speaker|1.85
 FA1|speaker|other-speaker|nan
-FA1|speaker|no-speaker|0.25255788906836696
+FA1|speaker|no-speaker|0.6565624999999997
 FA1|other-speaker|speaker|nan
 FA1|other-speaker|other-speaker|NA
 FA1|other-speaker|no-speaker|NA

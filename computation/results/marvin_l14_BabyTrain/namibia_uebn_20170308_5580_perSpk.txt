@@ -1,7 +1,7 @@
 ID|Ref|System|Duration
-!CHI_uebn|speaker|speaker|0.8722269470422699
+!CHI_uebn|speaker|speaker|3.0244031183050026
 !CHI_uebn|speaker|other-speaker|nan
-!CHI_uebn|speaker|no-speaker|0.846236605806151
+!CHI_uebn|speaker|no-speaker|2.9342829158199955
 !CHI_uebn|other-speaker|speaker|nan
 !CHI_uebn|other-speaker|other-speaker|NA
 !CHI_uebn|other-speaker|no-speaker|NA

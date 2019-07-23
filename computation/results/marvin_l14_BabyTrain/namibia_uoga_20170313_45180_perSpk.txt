@@ -1,7 +1,7 @@
 ID|Ref|System|Duration
-MOT*|speaker|speaker|3.540130151843818
+MOT*|speaker|speaker|3.5700000000000007
 MOT*|speaker|other-speaker|nan
-MOT*|speaker|no-speaker|0.7349240780911058
+MOT*|speaker|no-speaker|0.7411249999999996
 MOT*|other-speaker|speaker|nan
 MOT*|other-speaker|other-speaker|NA
 MOT*|other-speaker|no-speaker|NA

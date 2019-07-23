@@ -1,7 +1,7 @@
 ID|Ref|System|Duration
-!CHI_C25|speaker|speaker|0.3361282234875915
+!CHI_C25|speaker|speaker|0.5800000000000054
 !CHI_C25|speaker|other-speaker|nan
-!CHI_C25|speaker|no-speaker|0.4122102574325955
+!CHI_C25|speaker|no-speaker|0.7112819828999974
 !CHI_C25|other-speaker|speaker|nan
 !CHI_C25|other-speaker|other-speaker|NA
 !CHI_C25|other-speaker|no-speaker|NA
