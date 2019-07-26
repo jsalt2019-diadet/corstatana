@@ -65,16 +65,16 @@ def get_intervals(rttm):
             if float(dur) > 0:
                 intervals[wav].addi(float(onset), float(onset) + float(dur), label)
 
+    # merge overlaps between segments to get simple VAD
     for wav in intervals:
         intervals[wav].merge_overlaps(data_reducer=lambda x,y: "%%".join([x, y]))
+
     return intervals
 
 def chunk_SNR(intervals, corpus_path, subset, chunk_dur):
     """
         Cut speech segments in chunk_dur segments and compute SNR on those.
         For each chunk_dur chunk output SNR Value
-        .
-        TODO : IF SEGMENTS IS MORE THAN 10 SECONDS LONG PUT NA AS SNR VALUE
     """
 
     corpus_snr = defaultdict(list)
@@ -84,6 +84,8 @@ def chunk_SNR(intervals, corpus_path, subset, chunk_dur):
         wav_path = os.path.join(corpus_path,
                             subset, "wav",
                             "{}.wav".format(wav))
+
+        # read wav and get framerate w/ scipy
         frate, wav_sig = scipy.io.wavfile.read(wav_path)
 
         # get wav duration
@@ -92,6 +94,7 @@ def chunk_SNR(intervals, corpus_path, subset, chunk_dur):
         # manage onsets and offsets in seconds
         for onset in np.arange(0, dur, chunk_dur):
             offset = onset + chunk_dur
+            
             # get all labels occuring between onset and offset + silences
             ovls = intervals[wav].overlap(onset, offset)
             prev_on = onset
@@ -99,6 +102,8 @@ def chunk_SNR(intervals, corpus_path, subset, chunk_dur):
             chunk_labels = []
             sils = []
             spch = []
+
+            # get silences occuring in the examined chunk
             for interval in ovls: 
                 ov_on, ov_off, ov_lab = interval
                 spch.append((ov_on, ov_off))
@@ -106,11 +111,14 @@ def chunk_SNR(intervals, corpus_path, subset, chunk_dur):
                     sils.append((prev_on, ov_on))
                 prev_on = ov_on
                 prev_off = ov_off
+
+                # keep track of all labels speaker in current chunk
                 chunk_labels += ov_lab.split('%%')
             else:
                 if prev_off < offset:
                     sils.append((prev_off, min(offset, dur)))
         
+            # if the chunk doesn't contain speech or silence, juste put "NA" as SNR value
             try:
                 sil_idxs = np.concatenate([np.arange(int(frate * on), int(frate * off)-1) for on, off in sils])
             except:
@@ -123,8 +131,13 @@ def chunk_SNR(intervals, corpus_path, subset, chunk_dur):
                 continue
 
             sil_wav = wav_sig[sil_idxs]
+            try:
+                spch_wav = wav_sig[spch_idxs]
+            except:
+                # TODO: shouldn't happen, bad annotations ? to be checked..
+                ipdb.set_trace()
+                spch_wav = wav_sig[spch_idxs[spch_idxs < len(wav_sig)]]
 
-            spch_wav = wav_sig[spch_idxs]
             chunk_snr = rms(spch_wav) / rms(sil_wav) if (len(sil_wav) > 0 and len(spch_wav) > 0) else "NA"
             corpus_snr[wav].append((onset, offset, chunk_labels, chunk_snr))
 
@@ -162,9 +175,8 @@ def miss_FA_per_chunk(ref_tree, sys_tree, ref_sil_tree, sys_sil_tree, chunk_dur,
     chunk_rates = defaultdict(list) 
    
     for wav in ref_tree:
+        # get annotated boundaries from uem
         beg, end = uem[wav]
-        print(wav)
-        t0 = time.time()
         for on in np.arange(beg, end, chunk_dur):
             false_dur = 0
             miss_dur = 0
@@ -173,29 +185,32 @@ def miss_FA_per_chunk(ref_tree, sys_tree, ref_sil_tree, sys_sil_tree, chunk_dur,
             off = chunk_dur + on
             ref_segs = ref_tree[wav].overlap(on, off)
             
+            # duration of correct classification: overlap of system and reference
             for ovl in ref_segs:
                 ref_on, ref_off, ov_lab = ovl
                 sys_ovls = sys_tree[wav].overlap(max(ref_on, on), min(ref_off, off))
                 spch_dur += min(off, ref_off) - max(on, ref_on)
                 for sys_on, sys_off, sys_lab in sys_ovls:
                     true_dur += min(off, min(sys_off, ref_off)) - max(on, max(sys_on, ref_on))
+
+            # duration of false alarm: overlap of system with silence_reference
             sil_segs = ref_sil_tree[wav].overlap(on,off)
             for ovl in sil_segs:
                 sil_on, sil_off, sil_lab = ovl
                 sys_ovls = sys_tree[wav].overlap(max(sil_on, on), min(sil_off, off))
                 for sys_on, sys_off, sys_lab in sys_ovls:
                     false_dur += min(off, min(sys_off, sil_off)) - max(on, max(sys_on, sil_on))
+
+            # duration of misses: overlap of silences from system with reference
             sys_sil_segs = sys_sil_tree[wav].overlap(on, off)
             for ovl in sys_sil_segs:
                 ssil_on, ssil_off, ssil_lab = ovl
                 ref_ovls = ref_tree[wav].overlap(max(ssil_on, on), min(ssil_off, off))
                 for ref_on, ref_off, ref_lab in ref_ovls:
                     miss_dur += min(off, min(ref_off, ssil_off)) - max(on, max(ref_on, ssil_on))
-            if spch_dur == 0:
-                spch_dur = 1
-            chunk_rates[wav].append((on, min(end, off), true_dur/spch_dur,
-                                    false_dur/spch_dur, miss_dur/spch_dur))
-        print(time.time() - t0)
+
+            chunk_rates[wav].append((on, min(end, off), true_dur,
+                                    false_dur, miss_dur))
         with open('chunk_rates_{}.csv'.format(wav), 'w') as fout:
             for on, off, true, false, miss in chunk_rates[wav]:
                 fout.write(u'{},{},{},{},{}\n'.format(on, off, true, false, miss))
@@ -223,10 +238,12 @@ def main():
 
     corpus2rttm = {'CHiME5': 'allU01_{}.rttm',
                    'AMI': 'allMix-Headset_{}.rttm',
-                   'BabyTrain': 'all_{}.rttm'}
+                   'BabyTrain': 'all_{}.rttm',
+                   'lena_eval': 'all_{}.rttm'}
     sys_rttm = get_intervals(args.rttm)
-    #subset = 'test'
     for subset in ['train', 'dev', 'test']:
+        if corpus_name == "lena_eval" and subset != 'test':
+            continue
         # read annotations
         rttm = os.path.join(args.corpus, subset,
                             corpus2rttm[corpus_name].format(subset))
@@ -244,7 +261,7 @@ def main():
 
         chunk_rates = miss_FA_per_chunk(ref_rttm, sys_rttm, ref_sils, sys_sils, args.chunk_dur, uem_dict)
 
-        corpus_snr = chunk_SNR(intervals, args.corpus, subset, args.chunk_dur)
+        corpus_snr = chunk_SNR(ref_rttm, args.corpus, subset, args.chunk_dur)
 
         with open('{}_{}_{}.csv'.format(corpus_name, subset, args.chunk_dur), 'w') as fout:
             for wav in corpus_snr:
