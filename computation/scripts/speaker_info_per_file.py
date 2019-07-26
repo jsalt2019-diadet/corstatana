@@ -34,9 +34,8 @@ from spk_map import spk_map
 from operator import itemgetter
 from collections import defaultdict
 
-# for debug
-DEBUG = True
-
+# for debugging
+DEBUG = False
 
 def rms(x):
     'compute RMS of signal x'
@@ -78,17 +77,20 @@ def parse_rttms(rttm):
                 _, wav, _, onset, dur, _, _, label, _ , _= line.split()
 
             annot[wav].append((float(onset), float(onset) + float(dur), label))
-    if DEBUG:
-        for wav in annot:
-            annot[wav] = sorted(annot[wav], key=itemgetter(0, 1))
-            #if not annot[wav] == sorted(annot[wav], key=itemgetter(0, 1)):
-            #    print("annotations for {} are not sorted, check out".format(wav))
-            #    print(annot[wav])
-            #    exit()
+
+    # the output needs to be sorted
+    for wav in annot:
+        annot[wav] = sorted(annot[wav], key=itemgetter(0, 1))
+    
     return annot
 
 def get_wav_len(annot, corpus_path, subset, info):
-    """ for each wav file in the annotation get its duration """
+    """ for each wav file in the annotation get its duration using sox
+        OUTPUT
+        ------
+        info: defaultdict(list) with the wav duration appended
+              for each key=wav
+    """
 
     for wav in annot:
         wav_path = os.path.join(corpus_path,
@@ -111,10 +113,6 @@ def get_wav_len(annot, corpus_path, subset, info):
             buff.seek(0)
             rate, sig = scipy.io.wavfile.read(buff)
 
-        #m = sig.mean()
-        #sd = sig.std()
-        ##info[wav].append(float(np.where(sd == 0, 0, m/sd)))
-        #print('mean sig rsn is {}'.format(float(np.where(sd == 0, 0, m/sd))))
     return info
 
 def count_labels(annot, info):
@@ -129,7 +127,8 @@ def count_labels(annot, info):
             print(set(labels))
         
         # count number of children, femal adult, male adult, uncertain 
-        CHIs = [lab for on, off, lab in annot[wav] if spk_map[lab] == "CHI" or spk_map[lab] == "KCHI"]
+        CHIs = [lab for on, off, lab in annot[wav] if spk_map[lab] == "CHI" 
+                                                   or spk_map[lab] == "KCHI"]
         FAs = [lab for on, off, lab in annot[wav] if spk_map[lab] == "FEM"]
         MAs = [lab for on, off, lab in annot[wav] if spk_map[lab] == "MAL"]
         uncertains = [lab for on, off, lab in annot[wav] if spk_map[lab] == "SPEECH"]
@@ -137,13 +136,13 @@ def count_labels(annot, info):
                                                        and spk_map[lab] != 'FEM'
                                                        and spk_map[lab] != 'MAL'
                                                        and spk_map[lab] != 'SPEECH']
-        print(the_rest)
         # append information about speaker for wav
         info[wav].append(len(set(labels))) ## number of speakers in total
         info[wav].append(len(set(CHIs))) ## number of children
         info[wav].append(len(set(FAs))) ## number of female adults
         info[wav].append(len(set(MAs))) ## number of male adults
         info[wav].append(len(set(uncertains))) ## number of uncertains
+
     return info
 
 def vad_no_ovl(annot):
@@ -157,23 +156,27 @@ def vad_no_ovl(annot):
         prev_off = annot[wav][0][1]
         for i, (on, off, lab) in enumerate(annot[wav]):
             if on > prev_off: 
+                # on > prev_off implies theres a gap between
+                # previous annotation and current one
                 vad[wav].append((prev_on, prev_off))
                 prev_on = on
                 prev_off = off
             elif on < prev_off and off > prev_off:
+                # previous and current annotation overlap
                 prev_off = off
             elif i == len(annot[wav]) and off < prev_off:
+                # append last segment when last and second to 
+                # last overlap (otherwise would not be added by
+                # previous cases)
                 vad[wav].append((prev_on, prev_off))
+
     return vad
 
-def measure_overlap(annot, info):
+def measure_overlap(annot, info, info_perSpk):
     """ Measure quantity of overlap speech in each wav. Uses the fact
         that the annotations are sorted for each wav."""
 
-    #/TODO MOVE OUTSIDE 
-    info_perSpk = defaultdict(list)
     for wav in annot:
-       
 
         prev_on = -1
         prev_off= -1
@@ -183,6 +186,7 @@ def measure_overlap(annot, info):
         dur_speech = 0
         dur_speech_perSpk = defaultdict(float)
         all_vocs = []
+
         for on, off, lab in annot[wav]:
             # if current annotation starts before end of previous, add to
             # overlap duration
@@ -208,6 +212,7 @@ def measure_overlap(annot, info):
             info_perSpk[wav].append(dur_ovl_perSpk)
             info_perSpk[wav].append(dur_nonovl_perSpk)
             info_perSpk[wav].append(dur_speech_perSpk)
+
     return info, info_perSpk
 
 def write_info_per_file(corpus_name, subset, info):
@@ -236,7 +241,6 @@ def write_info_per_speaker(corpus_name, subset, info_perSpk):
               subset)), 'w') as fout:
         fout.write(u'file,speaker,role,tot_ovl_speech,tot_nonovl_speech,snr\n')
         for wav in info_perSpk:
-            #TODO PUT SNR 
             dur_ovl, dur_nonovl, dur_speech, snr= info_perSpk[wav]
             for spk in dur_speech:
                 fout.write(u'{w},{s},{r},{o},{no},{snr}\n'.format(w=wav, s=spk, r=spk_map[spk],
@@ -266,6 +270,7 @@ def get_silence_times(annot, info):
         # check last label vs wav duration
         if wav_dur > annot[wav][-1][1]:
             sils[wav].append((annot[wav][-1][1], wav_dur, "SIL"))
+
     return sils
 
                 
@@ -301,8 +306,12 @@ def extract_wav_from_label(wav, corpus_path, subset, annot, label):
         return
 
     # get array that contains signal only from requested label
-    lab_sig = wav[lab_idx]
-    
+    try:
+        lab_sig = wav[lab_idx]
+    except:
+        ### shouldn't happen, investigate... Bad annotations ?
+        lab_sig = wav[lab_idx[lab_idx < len(wav)]] 
+
     return lab_sig
 
 def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
@@ -312,7 +321,7 @@ def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
     per_label_snr = defaultdict(list)
 
     for wav in annot:
-
+        # get wavform of annotated part and of silence
         sil_sig = extract_wav_from_label(wav, corpus, subset, sils[wav], "SIL")
         speech_sig = extract_wav_from_label(wav, corpus, subset, annot[wav], "ALL")
       
@@ -320,17 +329,16 @@ def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
         try:
             sil_rms = rms(sil_sig)
         except:
-            print(wav)
             sil_rms = None
-             
+
+        # if one or both signals are empty just put "NA"
         if (speech_sig is not None) and (sil_sig is not None):
             info[wav].append(rms(speech_sig) / sil_rms)
         else:
             info[wav].append("NA")
 
-        print('Global snr is {}'.format(info[wav][-1]))
         dur_ovl, dur_nonovl, dur_speech= info_perSpk[wav]
-        #for label in ['KCHI', 'CHI', 'FEM', 'MAL', 'SPEECH']:
+
         for label in dur_speech:
             lab_sig = extract_wav_from_label(wav, corpus, subset, annot[wav], label)
              
@@ -342,13 +350,12 @@ def estimate_snr(annot, corpus, subset, sils, info, info_perSpk):
 
 
         info_perSpk[wav].append(per_label_snr)
+
     return info, info_perSpk       
 
 def local_snr(annot, vad, corpus_path, subset, sils):
     """Cut speech segments in 100 ms frames and compute SNR on those.
        for each 100s chunk output SNR Value + all current labels
-
-       TODO: First extract VAD with no gaps, the
     """
 
     local_snr = defaultdict(list)
@@ -367,6 +374,7 @@ def local_snr(annot, vad, corpus_path, subset, sils):
         sil_rms = rms(sil_sig)
         snr_speech = []
         for on, off in vad[wav]:
+            # compute SNR values for short windows of 0.1 seconds
             segments = np.arange(on, off, 0.1)
             snr_speech += [(b, rms(wav_sig[int(frate * b):int(frate * (b+0.1))]) / sil_rms)
                          for b in segments[:-1]]
@@ -409,16 +417,62 @@ def main():
     corpus2rttm = {'CHiME5': 'allU01_{}.rttm',
                    'AMI': 'allMix-Headset_{}.rttm',
                    'BabyTrain': 'all_{}.rttm',
+                   'lena_eval': 'all_{}.rttm',
                    'SRI': 'close_{}.rttm',
                    'SRI_far': 'far_{}.rttm'}
 
+    # get global estimations
+    for subset in ['train', 'dev', 'test']:
+        # skip some subset for some corpora
+        if "SRI" in corpus_name and subset == "train":
+            continue
+        elif (corpus_name == "lena_eval" or args.rttm) and subset != "test":
+            continue
+
+        # read annotations
+        if args.rttm:
+            rttm = args.rttm
+        else:
+            # if corpus is not know, assume rttm is all_subset.rttm
+            rttm = os.path.join(args.corpus, subset,
+                                corpus2rttm.setdefault(corpus_name,
+                                    "all_{}.rttm").format(subset))
+
+        annot = parse_rttms(rttm)
+
+        # get wav info
+        info = defaultdict(list)
+        info_perSpk = defaultdict(list)
+
+        info = get_wav_len(annot, args.corpus, subset, info)
+
+        # get speakers info
+        info = count_labels(annot, info)
+
+        # measure overlap
+        info, info_perSpk = measure_overlap(annot, info, info_perSpk)
+
+        # estimate SNR
+        sils = get_silence_times(annot, info)
+        info, info_perSpk = estimate_snr(annot, args.corpus, subset, sils,
+                                         info, info_perSpk)
+
+        # write output
+        write_info_per_file(corpus_name, subset, info)
+        write_info_per_speaker(corpus_name, subset, info_perSpk)
+
+    # if requested, get local snr
     if args.local_snr:
         for subset in ['train', 'dev', 'test']:
             if "SRI" in corpus_name and subset == "train":
                 continue
+            elif corpus_name == "lena_eval" and subset != "test":
+                continue
             # read annotations
             rttm = os.path.join(args.corpus, subset,
-                                corpus2rttm[corpus_name].format(subset))
+                                corpus2rttm.setdefault(corpus_name,
+                                    "all_{}.rttm").format(subset))
+
             annot = parse_rttms(rttm)
             vad = vad_no_ovl(annot)
             info = defaultdict(list)
@@ -428,54 +482,6 @@ def main():
 
             snr = local_snr(annot, vad, args.corpus, subset, sils)
             write_local_snr(snr)
-    elif not args.local_snr:
-        if not args.rttm:
-            for subset in ['train', 'dev', 'test']:
-                # read annotations
-                rttm = os.path.join(args.corpus, subset,
-                                    corpus2rttm[corpus_name].format(subset))
-                annot = parse_rttms(rttm)
-
-                # get wav info
-                info = defaultdict(list)
-                info = get_wav_len(annot, args.corpus, subset, info)
-
-                # get speakers info
-                info = count_labels(annot, info)
-
-                # measure overlap
-                info, info_perSpk = measure_overlap(annot, info)
-
-                # estimate SNR
-                sils = get_silence_times(annot, info)
-                info, info_perSpk = estimate_snr(annot, args.corpus, subset, sils,
-                                                 info, info_perSpk)
-
-                # write output
-                write_info_per_file(corpus_name, subset, info)
-                write_info_per_speaker(corpus_name, subset, info_perSpk)
-        else:
-            # analyze test
-            subset = "test"
-
-            # add " system" to name, to avoid overwriting corpus file
-            corpus_name = corpus_name + "_system"
-            # read annotations
-            annot = parse_rttms(args.rttm)
-
-            # get wav info
-            info = defaultdict(list)
-            info = get_wav_len(annot, args.corpus, subset, info)
-
-            # get speakers info
-            info = count_labels(annot, info)
-
-            # measure overlap
-            info, info_perSpk = measure_overlap(annot, info)
-
-            # write output
-            write_info_per_file(corpus_name, subset, info)
-            write_info_per_speaker(corpus_name, subset, info_perSpk)
 
 if __name__ == '__main__':
     main()
