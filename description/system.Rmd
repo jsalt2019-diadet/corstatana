@@ -34,7 +34,8 @@ allres=dir("../computation/results/",pattern=".csv")
 allres=allres[grep("aver",allres,invert=T)]
 #descriptors per speaker
 datsp=NULL
-for(j in allres[grep("perSpeaker",allres)])  datsp=rbind(datsp,cbind(j,read.csv(paste0("../computation/results/",j))))
+for(j in allres[grep("perSpeaker",allres)]) { datsp=rbind(datsp,cbind(j,read.csv(paste0("../computation/results/",j))))
+datsp$speaker=as.character(datsp$speaker)}
 datsp$uniq=paste(datsp$file,datsp$speaker)
 
 #descriptors per file

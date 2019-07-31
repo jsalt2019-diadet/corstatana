@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-!CHI_van8|speaker|speaker|0.9294624999999996
-!CHI_van8|speaker|other-speaker|nan
-!CHI_van8|speaker|no-speaker|0
-!CHI_van8|other-speaker|speaker|nan
-!CHI_van8|other-speaker|other-speaker|NA
-!CHI_van8|other-speaker|no-speaker|NA

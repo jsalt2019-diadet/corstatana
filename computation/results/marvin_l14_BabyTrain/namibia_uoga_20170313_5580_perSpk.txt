@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-!CHI_uoga|speaker|speaker|0.6700000000000017
-!CHI_uoga|speaker|other-speaker|nan
-!CHI_uoga|speaker|no-speaker|1.0460233209310061
-!CHI_uoga|other-speaker|speaker|nan
-!CHI_uoga|other-speaker|other-speaker|NA
-!CHI_uoga|other-speaker|no-speaker|NA

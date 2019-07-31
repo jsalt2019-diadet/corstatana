@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-C1|speaker|speaker|2.9108750000000025
-C1|speaker|other-speaker|nan
-C1|speaker|no-speaker|2.115249999999996
-C1|other-speaker|speaker|nan
-C1|other-speaker|other-speaker|NA
-C1|other-speaker|no-speaker|NA

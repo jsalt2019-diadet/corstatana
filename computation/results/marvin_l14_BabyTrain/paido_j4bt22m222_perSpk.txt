@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-!CHI_j22m4b|speaker|speaker|56.23200000000001
-!CHI_j22m4b|speaker|other-speaker|nan
-!CHI_j22m4b|speaker|no-speaker|0.761000000000001
-!CHI_j22m4b|other-speaker|speaker|nan
-!CHI_j22m4b|other-speaker|other-speaker|NA
-!CHI_j22m4b|other-speaker|no-speaker|NA

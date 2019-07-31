@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-!CHI_j24f4b|speaker|speaker|66.92499999999995
-!CHI_j24f4b|speaker|other-speaker|nan
-!CHI_j24f4b|speaker|no-speaker|2.775000000000043
-!CHI_j24f4b|other-speaker|speaker|nan
-!CHI_j24f4b|other-speaker|other-speaker|NA
-!CHI_j24f4b|other-speaker|no-speaker|NA

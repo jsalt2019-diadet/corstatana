@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-!MOT_nohlan|speaker|speaker|69.95399999999997
-!MOT_nohlan|speaker|other-speaker|nan
-!MOT_nohlan|speaker|no-speaker|23.358000000000047
-!MOT_nohlan|other-speaker|speaker|nan
-!MOT_nohlan|other-speaker|other-speaker|NA
-!MOT_nohlan|other-speaker|no-speaker|NA

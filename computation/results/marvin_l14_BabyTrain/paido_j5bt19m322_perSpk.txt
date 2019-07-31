@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-!CHI_j19m5b|speaker|speaker|56.45400000000007
-!CHI_j19m5b|speaker|other-speaker|nan
-!CHI_j19m5b|speaker|no-speaker|0.849999999999997
-!CHI_j19m5b|other-speaker|speaker|nan
-!CHI_j19m5b|other-speaker|other-speaker|NA
-!CHI_j19m5b|other-speaker|no-speaker|NA

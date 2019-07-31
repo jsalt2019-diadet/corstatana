@@ -1,7 +1,0 @@
-ID|Ref|System|Duration
-FEM|speaker|speaker|36.84199999999994
-FEM|speaker|other-speaker|nan
-FEM|speaker|no-speaker|47.86200000000004
-FEM|other-speaker|speaker|nan
-FEM|other-speaker|other-speaker|NA
-FEM|other-speaker|no-speaker|NA
