@@ -397,7 +397,9 @@ def main():
     parser.add_argument('--rttm', type=str, default=None,
                         help='(Optional) enable to link only test rttm, and not whole corpus.')
     parser.add_argument('--local_snr', action='store_true',
-                        help='if enabled, compute only local snr')
+                        help='Optional) if enabled, compute only local snr')
+    parser.add_argument('--no_wav', action='store_true',
+                        help="(Optional) if enabled, won't compute the SNR and the wav duration")
     parser.add_argument('--SRI_far', action='store_true',
                         help='if analysing the SRI corpus, enable to take FAR field '
                              'instead of close field')
@@ -424,7 +426,9 @@ def main():
     # get global estimations
     for subset in ['train', 'dev', 'test']:
         # skip some subset for some corpora
-        if "SRI" in corpus_name and subset == "train":
+        if (("SRI" in corpus_name
+             or 'dihard2' in corpus_name)
+           and subset == "train"):
             continue
         elif (corpus_name == "lena_eval" or args.rttm) and subset != "test":
             continue
@@ -444,7 +448,11 @@ def main():
         info = defaultdict(list)
         info_perSpk = defaultdict(list)
 
-        info = get_wav_len(annot, args.corpus, subset, info)
+        if not args.no_wav:
+            info = get_wav_len(annot, args.corpus, subset, info)
+        else:
+            for wav in annot:
+                info[wav].append('NA')
 
         # get speakers info
         info = count_labels(annot, info)
@@ -453,9 +461,19 @@ def main():
         info, info_perSpk = measure_overlap(annot, info, info_perSpk)
 
         # estimate SNR
-        sils = get_silence_times(annot, info)
-        info, info_perSpk = estimate_snr(annot, args.corpus, subset, sils,
+        if not args.no_wav:
+            sils = get_silence_times(annot, info)
+            info, info_perSpk = estimate_snr(annot, args.corpus, subset, sils,
                                          info, info_perSpk)
+        else:
+            for wav in annot:
+                info[wav].append('NA')
+                dur_ovl, dur_nonovl, dur_speech= info_perSpk[wav]
+                per_lab_snr = dict()
+                for label in dur_speech:
+                    per_lab_snr[label] = 'NA'
+                info_perSpk[wav].append(per_lab_snr)
+
 
         # write output
         write_info_per_file(corpus_name, subset, info)

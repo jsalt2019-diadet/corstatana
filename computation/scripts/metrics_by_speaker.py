@@ -53,7 +53,10 @@ def get_speech_duration(annot, uri):
     #    ipdb.set_trace()
     timeline = annot.get_timeline()
     dur = 0
-    prev_on = timeline[0][0]
+    try:
+        prev_on = timeline[0][0]
+    except:
+        return 0
     prev_off = timeline[0][1]
     for i, (on, off) in enumerate(timeline):
         if on > prev_off: 
@@ -101,7 +104,6 @@ def  accumulate_system(r_labels, s_labels, mapping, dur):
     correct = defaultdict(int)
     FA_spk = defaultdict(int)
     FA_speech = defaultdict(int)
-
     for r_spk in r_labels: 
         for s_spk in s_labels:
             r_label = r_labels[r_spk]
@@ -170,7 +172,7 @@ def main():
                                  'to evaluate your system.\n'
                                  'Choose between [train, test, development].\n'
                                  'Default is test.')
-    argparser.add_argument('--vad', action='store_false', 
+    argparser.add_argument('--vad', action='store_true', 
                            help='(OPTIONNAL) Enable if Evaluation a VAD system'
                                 ', this way only speech/non speech metrics '
                                 'will be reported.')
@@ -201,7 +203,7 @@ def main():
 
         r_labels = {lab: r_annot.label_timeline(lab) for lab in r_annot.labels()}
         s_labels = {lab: s_annot.label_timeline(lab) for lab in s_annot.labels()}
-        
+       
         if not args.vad:
             mapping = get_mapping(r_annot, s_annot)
         else:
